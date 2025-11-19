@@ -1,14 +1,7 @@
 import streamlit as st
-from example_extra import example
-from dashboard import dashboard
+from datetime import datetime
 
-st.set_page_config(
-    page_title="DanuCard - Churn Prediction & Retention Intelligence",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
-
-def inicio():
+def dashboard():
     html_content = """
     <!DOCTYPE html>
     <html lang="es">
@@ -329,34 +322,6 @@ def inicio():
                         <a class="nav-tab" href="?page=dashboard">Dashboard</a>
                 </div>
             </div>
-            
-            <div class="hero-section">
-                <h1 class="hero-title">DanuCard</h1>
-                <p class="hero-subtitle">Predicción de churn y estrategias data-driven para mejorar la fidelización de usuarios.</p>
-            </div>
-            
-            <div class="cards-container">
-                <div class="card">
-                    <div class="card-title">¿Quiénes somos?</div>
-                    <p class="card-content">Somos SHECODES, un equipo especializado en transformar datos en soluciones inteligentes.
-    A través de machine learning y análisis avanzado, ayudamos a las organizaciones a resolver problemas reales, optimizar decisiones y generar valor estratégico.</p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">Nuestro reto</div>
-                    <p class="card-content">
-                        DanuCard enfrenta una alta tasa de abandono durante los primeros meses de uso.
-    Nuestro proyecto busca predecir este comportamiento y diseñar soluciones accionables que fortalezcan la retención y mejoren la experiencia del usuario.
-                    </p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">Nuestra Visión</div>
-                    <p class="card-content">
-                        Desarrollar un modelo predictivo capaz de anticipar el churn, analizar los patrones de comportamiento de los usuarios e impulsar estrategias innovadoras de retención que fortalezcan la relación de DanuCard con sus clientes.
-                    </p>
-                </div>
-            </div>
         </div>
     </body>
     </html>
@@ -364,12 +329,50 @@ def inicio():
 
     st.html(html_content)
 
+    with st.sidebar:
+        st.header("Filtros")
 
-page = st.query_params.get("page", "inicio")
+        tasa_churn = st.checkbox(
+            "Tasa Churn",
+            ["Silent", "Parcial", "Complete"]
+        )
 
-if page == "inicio":
-    inicio()
-elif page == "propuestas":
-    example()
-elif page == "dashboard":
-    dashboard()
+        usuarios = st.checkbox(
+            "Usuarios",
+            ["Mujer", "Hombre"]
+        )
+
+        fecha = st.slider(
+            "Tiempo",
+            value = datetime(2022, 1, 1),
+            format="MM/YYYY"
+        )
+
+        st.markdown("---")
+
+
+    
+    def pageInfo():
+        st.title("Información Descriptiva")
+        st.write("Contenido de la página 1", tasa_churn, usuarios, fecha)
+
+    def pageChurn():
+        st.title("Análisis de Churn")
+        st.write("Contenido de la página 2")
+
+    def pageUsuario():
+        st.title("Perfil del Usuario")
+        st.write("Contenido de la página 3")
+
+    pages = {
+        "Páginas": [
+            st.Page(pageInfo, title="Información Descriptiva"),
+            st.Page(pageChurn, title="Análisis de Churn"),
+            st.Page(pageUsuario, title="Perfil del Usuario")
+        ]
+    }
+
+    pg = st.navigation(pages, position="sidebar")
+    pg.run()
+
+
