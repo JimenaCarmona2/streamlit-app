@@ -360,9 +360,19 @@ def inicio():
 
     st.html(html_content)
 
+if "page" not in st.session_state:
+    st.session_state.page = "inicio"
+
+url_page = st.query_params.get("page")
+
+if url_page in ["incio", "propuestas", "dashboard"]:
+    st.session_state.page = url_page
+else:
+    st.query_params["page"] = st.session_state.page
+
 navbar()
 
-page = st.query_params.get("page", "inicio")
+page = st.session_state.page
 
 if page == "inicio":
     inicio()
