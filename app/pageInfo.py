@@ -4,36 +4,42 @@ from datetime import datetime
 def pageInfo():
     st.subheader("Alertas")
 
-    with st.sidebar:
-        st.header("Filtros")
-
-        st.text("Tasa Churn")
-        st.checkbox("Silent")
-        st.checkbox("Parcial")
-        st.checkbox("Complete")
-
-        st.text("Usuarios")
-        st.checkbox("Mujer")
-        st.checkbox("Hombre")
-
-        st.slider(
-            "Tiempo",
-            min_value = datetime(2022, 1, 1),
-            max_value = datetime(2023, 12, 31),
-            format="MM/YYYY"
-        )
     
     col1, col2 = st.columns(2)
 
     with col1:
         container = st.container(border=True)
-        container.metric(label= "Meta 1", value="82%", delta="+5%")
+        container.metric(label= "Meta 1", value="82%")
 
     with col2:
         container1 = st.container(border=True)
-        container1.metric(label= "Meta 2", value="50%", delta="+10%")
+        container1.metric(label= "Meta 2", value="50%")
 
     st.subheader("Dashboard")
+
+    containerFiltros = st.container(border=True)
+    with containerFiltros:
+        fil1, fil2, fil3 = st.columns(3)
+
+    with fil1:
+        st.multiselect(
+            "Tasa de Churn",
+            options=["Silent", "Parcial", "Complete"],
+            default=["Complete"]
+        )
+    with fil2:
+        st.radio(
+            "Usuarios",
+            options=["Ambos", "Mujer", "Hombre"],
+            horizontal=True
+        )
+    with fil3:
+        st.slider(
+            "Tiempo",
+            min_value=datetime(2022, 1, 1),
+            max_value=datetime(2023, 12, 31),
+            format="MM/YYYY"
+        )
 
     col3, col4, col5 = st.columns(3)
     with col3:

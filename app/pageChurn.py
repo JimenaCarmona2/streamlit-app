@@ -3,6 +3,16 @@ from datetime import datetime
 
 def pageChurn():
         st.subheader("KPI's")
+
+        containerFiltros = st.container(border=True)
+        with containerFiltros:
+            st.slider(
+                 "Tiempo",
+                    min_value=datetime(2022, 1, 1),
+                    max_value=datetime(2023, 12, 31),
+                    format="MM/YYYY"
+            )
+
         col1, col2, col3 = st.columns(3)
         with col1:
             container = st.container(border=True)
@@ -94,14 +104,3 @@ def pageChurn():
 
             container9 = st.container(border=True)
             container9.metric(label= "Recall", value="75%")
-
-
-        
-        with st.sidebar:
-            st.header("Filtros")
-            st.slider(
-                "Tiempo",
-                min_value = datetime(2022, 1, 1),
-                max_value = datetime(2023, 12, 31),
-                format="MM/YYYY"
-            )
