@@ -5,6 +5,8 @@ from pageUsuario import pageUsuario
 
 def dashboard():
 
+    st.logo("app/img/logo.png")
+
     pages = {
         "Páginas": [
             st.Page(pageInfo, title="Información Descriptiva"),
