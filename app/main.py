@@ -70,15 +70,135 @@ def navbar():
                 color: #5b9cce;
                 background: rgba(91, 163, 208, 0.06);
             }}
+
+            .nav-tabs, .dropdown, .dropdown-content {{
+                position: relative;
+                z-index: 9999999;
+            }}
+
+            .dropdown {{
+                position: relative;
+                display: inline-block;
+                -webkit-tap-highlight-color: transparent;
+                z-index: 10000;
+                pointer-events: auto;
+            }}
+
+            .dropbtn {{
+                background-color: transparent;
+                color: #777;
+                padding: 9px 28px;
+                font-size: 14px;
+                font-weight: 600;
+                border: none;
+                border-radius: 24px;
+                cursor: pointer;
+                letter-spacing: 0.3px;
+                transition: all 0.25s ease;
+            }}
+
+            .dropdown-content {{
+                display: none;
+                position: absolute;
+                top: calc(100% - 1px);
+                left: 0;
+                min-width: 140px;
+                background: rgba(255,255,255,0.98);
+                backdrop-filter: blur(15px);
+                border-radius: 14px;
+                border: 1px solid rgba(91,163,208,0.1);
+                box-shadow: 0 2px 12px rgba(91,163,208,0.08);
+                z-index: 2147483647;
+                padding: 6px 0;
+                pointer-events: auto;
+                -webkit-user-select: none;
+            }}
+
+            .dropdown-content a {{
+                display: block;
+                padding: 10px 22px;
+                color: #777;
+                font-size: 14px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all .3s ease;
+            }}
+
+            .dropdown-content a:hover {{
+                background: rgba(91,163,208,0.06);
+                color: #5b9cce;
+            }}
+
+            .dropdown.open > .dropdown-content,
+            .dropdown:focus-within > .dropdown-content {{
+                display: block;
+            }}
+
+            .dropdown.open > .dropbtn,
+            .dropdown:focus-within > .dropbtn {{
+                background: rgba(91,163,208,0.06);
+                color: #5b9cce;
+            }}
         </style>
 
         <div class="nav-container">
             <div class="nav-tabs">
                 <a class="{get_tab_class('inicio')}" href="?page=inicio">Inicio</a>
                 <a class="{get_tab_class('propuestas')}" href="?page=propuestas">Propuestas</a>
-                <a class="{get_tab_class('dashboard')}" href="?page=dashboard">Dashboard</a>
+
+                <div class="dropdown" id="mainDropdown">
+                <button class="dropbtn {get_tab_class('dashboard')}" id="dropBtn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+                    Dashboard ▾
+                </button>
+
+                <div class="dropdown-content" role="menu" aria-labelledby="dropBtn">
+                    <a href="?page=dashboard" role="menuitem">Información Descriptiva</a>
+                    <a href="?page=dashboard" role="menuitem">Análisis de Churn</a>
+                    <a href="?page=dashboard" role="menuitem">Perfil del Usuario</a>
+                </div>
+            </div>
+                
             </div>
         </div>
+
+        <script>
+            (function() {{
+                const dropdown = document.getElementById('mainDropdown');
+                const btn = document.getElementById('dropBtn');
+
+                btn.addEventListener('click', function(e) {{
+                    e.stopPropagation();
+                    const isOpen = dropdown.classList.contains('open');
+                    dropdown.classList.toggle('open', !isOpen);
+                    btn.setAttribute('aria-expanded', String(!isOpen));
+                }});
+
+                dropdown.addEventListener('mouseenter', () => {{
+                    dropdown.classList.add('open');
+                    btn.setAttribute('aria-expanded', 'true');
+                }});
+                dropdown.addEventListener('mouseleave', () => {{
+                    if (!dropdown.matches(':focus-within')) {{
+                        dropdown.classList.remove('open');
+                        btn.setAttribute('aria-expanded', 'false');
+                    }}
+                }});
+
+                document.addEventListener('click', function(e) {{
+                    if (!dropdown.contains(e.target)) {{
+                        dropdown.classList.remove('open');
+                        btn.setAttribute('aria-expanded', 'false');
+                    }}
+                }});
+
+                dropdown.querySelectorAll('a').forEach(a => {{
+                    a.addEventListener('click', () => {{
+                        dropdown.classList.remove('open');
+                        btn.setAttribute('aria-expanded', 'false');
+                    }});
+                }});
+            }})();
+        </script>
     """)
 
 def inicio():
@@ -94,13 +214,16 @@ def inicio():
             background: linear-gradient(135deg, #f5f9fc 0%, #e8f0f7 25%, #f0f6fa 50%, #e8f1f8 75%, #f5f9fc 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
             min-height: 100vh;
-            position: relative;
             overflow-x: hidden;
+        }
+
+        body:before, body:after, .page-wrapper:before {
+            pointer-events: none !important;
         }
 
         body::before {
             content: '';
-            position: fixed;
+            position: absolute;
             top: -20%;
             left: -10%;
             width: 700px;
@@ -108,13 +231,13 @@ def inicio():
             background: radial-gradient(circle, rgba(91, 163, 208, 0.15) 0%, rgba(91, 163, 208, 0.05) 40%, transparent 70%);
             border-radius: 45% 55% 60% 40%;
             animation: float 25s infinite ease-in-out;
-            z-index: 0;
+            z-index: -10;
             filter: blur(40px);
         }
 
         body::after {
             content: '';
-            position: fixed;
+            position: absolute;
             bottom: -25%;
             right: -15%;
             width: 700px;
@@ -122,13 +245,13 @@ def inicio():
             background: radial-gradient(circle, rgba(74, 130, 180, 0.12) 0%, rgba(74, 130, 180, 0.04) 40%, transparent 70%);
             border-radius: 40% 60% 55% 45%;
             animation: float 30s infinite ease-in-out reverse;
-            z-index: 0;
+            z-index: -10;
             filter: blur(40px);
         }
 
         .page-wrapper::before {
             content: '';
-            position: fixed;
+            position: absolute;
             top: 40%;
             left: 50%;
             transform: translateX(-50%);
@@ -137,7 +260,7 @@ def inicio():
             background: radial-gradient(circle, rgba(91, 163, 208, 0.08) 0%, transparent 70%);
             border-radius: 50%;
             animation: float 35s infinite ease-in-out;
-            z-index: 0;
+            z-index: -10;
             pointer-events: none;
             filter: blur(50px);
         }
