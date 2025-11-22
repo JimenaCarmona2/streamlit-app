@@ -1,6 +1,9 @@
 import streamlit as st
 from example_extra import example
 from dashboard import dashboard
+from pageInfo import pageInfo
+from pageChurn import pageChurn
+from pageUsuario import pageUsuario
 
 st.set_page_config(
     page_title="DanuCard - Churn Prediction & Retention Intelligence",
@@ -147,14 +150,14 @@ def navbar():
                 <a class="{get_tab_class('propuestas')}" href="?page=propuestas">Propuestas</a>
 
                 <div class="dropdown" id="mainDropdown">
-                <button class="dropbtn {get_tab_class('dashboard')}" id="dropBtn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+                <button class="dropbtn {'nav-tab active' if current_page in ['pageInfo', 'pageChurn', 'pageUsuario'] else 'nav-tab'}" id="dropBtn" aria-haspopup="true" aria-expanded="false" tabindex="0">
                     Dashboard ▾
                 </button>
 
                 <div class="dropdown-content" role="menu" aria-labelledby="dropBtn">
-                    <a href="?page=dashboard" role="menuitem">Información Descriptiva</a>
-                    <a href="?page=dashboard" role="menuitem">Análisis de Churn</a>
-                    <a href="?page=dashboard" role="menuitem">Perfil del Usuario</a>
+                    <a href="?page=pageInfo" role="menuitem">Información Descriptiva</a>
+                    <a href="?page=pageChurn" role="menuitem">Análisis de Churn</a>
+                    <a href="?page=pageUsuario" role="menuitem">Perfil del Usuario</a>
                 </div>
             </div>
                 
@@ -488,7 +491,7 @@ if "page" not in st.session_state:
 
 url_page = st.query_params.get("page")
 
-if url_page in ["incio", "propuestas", "dashboard"]:
+if url_page in ["incio", "propuestas", "pageInfo", "pageChurn", "pageUsuario"]:
     st.session_state.page = url_page
 else:
     st.query_params["page"] = st.session_state.page
@@ -501,5 +504,9 @@ if page == "inicio":
     inicio()
 elif page == "propuestas":
     example()
-elif page == "dashboard":
-    dashboard()
+elif page == "pageInfo":
+    pageInfo()
+elif page == "pageChurn":
+    pageChurn()
+elif page == "pageUsuario":
+    pageUsuario()
