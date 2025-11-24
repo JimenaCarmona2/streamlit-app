@@ -2,8 +2,6 @@ import streamlit as st
 from datetime import datetime
 
 def pageChurn():
-        st.subheader("KPI's")
-
         containerFiltros = st.container(border=True)
         with containerFiltros:
             st.slider(
@@ -82,25 +80,3 @@ def pageChurn():
                     "Canal E": 10
                  }
             )
-
-        st.subheader("Modelo de Machine Learning")
-
-        col4, col5 = st.columns([0.9, 0.11])
-        with col4:
-            container6 = st.container(border=True)
-            container6.scatter_chart(
-                {
-                    "Características": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                    "Importancia": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-                }
-            )
-
-        with col5:
-            container7 = st.container(border=True)
-            container7.metric(label= "Accuracy", value="82%")
-
-            container8 = st.container(border=True)
-            container8.metric(label= "Precision", value="78%")
-
-            container9 = st.container(border=True)
-            container9.metric(label= "Recall", value="75%")
