@@ -2,7 +2,6 @@ import os
 import pickle
 import joblib
 
-
 def save_uploaded_model(uploaded_file, dest_dir="../models"):
     """Guarda el archivo subido en `dest_dir` y devuelve la ruta guardada.
     `uploaded_file` puede ser un objeto con `.read()` y `.name` (como Streamlit UploadedFile).
