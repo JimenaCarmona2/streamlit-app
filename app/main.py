@@ -1,6 +1,5 @@
 import streamlit as st
 from example_extra import example
-from dashboard import dashboard
 from pageInfo import pageInfo
 from pageChurn import pageChurn
 from pageUsuario import pageUsuario
