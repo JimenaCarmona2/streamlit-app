@@ -50,43 +50,55 @@ def inicio():
     with open("app/styles/inicio.css") as f:
         inicio_css = f"<style>{f.read()}</style>"
 
+    # Inyectar CSS + Bootstrap Icons
+    st.markdown(inicio_css, unsafe_allow_html=True)
+    st.markdown("""
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .card-title i {
+            margin-right: 10px;
+            font-size: 20px;
+            vertical-align: middle;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Contenido HTML
     html_content = """
-    """ + inicio_css + """
-
-    <div class="page-wrapper">
-
+    <html lang="es">
+    <div class="inicio-wrapper">
         <div class="hero-section">
-            <h1 class="hero-title">DanuCard</h1>
-            <p class="hero-subtitle">Predicción de churn y estrategias data-driven para mejorar la fidelización de usuarios.</p>
+            <h1 class="inicio-title">DanuCard</h1>
+            <p class="inicio-subtitle">Predicción de churn y estrategias data-driven para mejorar la fidelización de usuarios.</p>
         </div>
 
         <div class="cards-container">
+
             <div class="card">
-                <div class="card-title">¿Quiénes somos?</div>
-                <p class="card-content">
-                    Somos SHECODES, un equipo especializado en transformar datos en soluciones inteligentes.
-    A través de machine learning y análisis avanzado, ayudamos a las organizaciones a resolver problemas reales, optimizar decisiones y generar valor estratégico.
-                </p>
+                <div class="card-title"><i class="bi bi-people-fill"></i> ¿Quiénes somos?</div>
+                <div class="card-content contenedor-texto">
+                    En SHECODES transformamos datos en soluciones inteligentes usando machine learning para resolver problemas reales y generar valor.
+                </div>
             </div>
 
             <div class="card">
-                <div class="card-title">Nuestro reto</div>
-                <p class="card-content">
-                    DanuCard enfrenta una alta tasa de abandono durante los primeros meses de uso.
-    Nuestro proyecto busca predecir este comportamiento y diseñar soluciones accionables que fortalezcan la retención y mejoren la experiencia del usuario.
-                </p>
+                <div class="card-title"><i class="bi bi-bullseye"></i> Nuestro reto</div>
+                <div class="card-content contenedor-texto">
+                   DanuCard sufre una alta deserción inicial. Buscamos predecir el abandono temprano y proponer acciones eficaces para mejorar la retención.
+                </div>
             </div>
 
             <div class="card">
-                <div class="card-title">Nuestra visión</div>
-                <p class="card-content">
-                    Desarrollar un modelo predictivo capaz de anticipar el churn, analizar los patrones de comportamiento de los usuarios e impulsar estrategias innovadoras de retención que fortalezcan la relación de DanuCard con sus clientes.
-                </p>
+                <div class="card-title"><i class="bi bi-rocket-takeoff-fill"></i> Nuestra visión</div>
+                <div class="card-content contenedor-texto">
+                    Crear un modelo predictivo robusto que anticipe el churn, analice patrones de comportamiento y potencie estrategias efectivas de fidelización sostenible.
+                </div>
             </div>
+
         </div>
-    </div>
-    """
 
+    </div>
+    """ 
     st.html(html_content)
 
 if "page" not in st.session_state:

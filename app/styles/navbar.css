@@ -20,11 +20,12 @@
     display: flex;
     gap: 14px;
     background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(12px);
     padding: 11px 14px;
     border-radius: 32px;
-    border: 1px solid rgba(91, 163, 208, 0.1);
-    box-shadow: 0 2px 12px rgba(91, 163, 208, 0.05);
+    border: 1px solid rgba(70, 130, 180, 0.25);
+    box-shadow: 0 8px 24px rgba(70, 130, 180, 0.25); 
+
 }
 
 .nav-tab {

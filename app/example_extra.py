@@ -2,33 +2,63 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+
 def example():
+    st.set_page_config(
+        page_title="Propuestas",
+        layout="wide"
+    )
 
-    st.set_page_config(page_title="Página de ejemplo", layout="centered")
+    # Aplica el CSS externo
+    with open("app/styles/propuestas.css") as f:
+        inicio_css = f"<style>{f.read()}</style>"
+    st.markdown(inicio_css, unsafe_allow_html=True)
 
-    st.title("Página de ejemplo extra")
-    st.write("Esta es una página de ejemplo que puedes usar como plantilla para nuevas páginas.")
 
-    st.markdown("---")
+    st.markdown("""
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    """, unsafe_allow_html=True)
 
-    n = st.slider("Número de filas de ejemplo", min_value=5, max_value=500, value=50)
+    # Header
+    st.markdown("""
+        <div class="header-section">
+            <div class="header-title">Propuestas Clave</div>
+            <div class="header-subtitle">Un roadmap hacia el éxito</div>
+        </div>
+    """, unsafe_allow_html=True)
 
-    if st.button("Generar datos de ejemplo"):
-        df = pd.DataFrame({
-            "x": np.arange(n),
-            "y": np.random.randn(n).cumsum(),
-            "label": np.random.choice(["A","B","C"], size=n)
-        })
-        st.subheader("Gráfico de series de ejemplo")
-        st.line_chart(df.set_index("x")["y"]) 
+    # Three phase columns
+    col1, col2, col3 = st.columns(3)
 
-        st.subheader("Tabla de ejemplo (primeras filas)")
-        st.dataframe(df.head(50))
+    with col1:
+        st.markdown("""
+            <div class="phase-container phase-1"> 
+                <div class="phase-number">01</div>
+                <div class="phase-title">Acciones inmediatas</div>
+                <div class="phase-description">
+                    Acciones inmediatas para reducir el abandono mediante personalización, recompensas, venta cruzada y educación financiera.
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
 
-        csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button("Descargar CSV de ejemplo", data=csv, file_name="ejemplo.csv")
-    else:
-        st.info("Pulsa 'Generar datos de ejemplo' para ver la demo.")
+    with col2:
+        st.markdown("""
+            <div class="phase-container phase-2">
+                <div class="phase-number">02</div>
+                <div class="phase-title">Emotional AI Banking </div>
+                <div class="phase-description">
+                    Se integran tecnologías de inteligencia artificial para detectar señales de abandono y activar respuestas automáticas que mejoran la retención.
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown("---")
-    st.write("Consejo: copia este archivo a `app/pages/nueva_pagina.py` y edítalo para crear más páginas.")
+    with col3:
+        st.markdown("""
+            <div class="phase-container phase-3">
+                <div class="phase-number">03</div>
+                <div class="phase-title">Digital Twin</div>
+                <div class="phase-description">
+                    Se implementa un modelo digital que simula decisiones del cliente para anticipar comportamientos y prevenir el abandono de forma proactiva.
+                </div>
+            </div>
+        """, unsafe_allow_html=True)

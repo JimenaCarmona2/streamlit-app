@@ -1,0 +1,73 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.phase-container {
+    padding: 30px 25px; 
+    min-height: 280px; 
+    border-radius: 16px;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.phase-container:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+.phase-container.phase-1 {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+}
+.phase-container.phase-2 {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+}
+.phase-container.phase-3 {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+}
+.phase-title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+}
+.phase-number {
+    font-size: 56px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    opacity: 0.85;
+}
+.phase-description {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    opacity: 0.95;
+    text-align: justify;
+    text-justify: inter-word;
+}
+.header-section {
+    text-align: center;
+    margin-bottom: 50px;
+}
+.header-title {
+    font-size: 60px;
+    font-weight: 900;
+    background: black;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -1.5px;
+}
+.header-subtitle {
+    font-size: 18px;
+    color: #475569;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.7;
+    font-weight: 400;
+}
