@@ -8,7 +8,6 @@ data = pd.read_parquet("app/data/df_ml_final.parquet")
 # solo para los kpis con churn 
 data_churn = data[data["Churn"] == 1].reset_index(drop=True)
 
-# KPI 1: Abandono por grupo de edad
 def kpi_abandono_por_edad():
     tabla = data.groupby(['Cat_age', 'Churn']).size().reset_index(name='Usuarios')
     colores = ["#6586f0", "#3dace7"]
@@ -147,3 +146,16 @@ def kpi_atencion_telefonica():
         template='plotly_white'
     )
     return fig
+
+# Métricas
+def tasa_de_churn():
+    total_usuarios = data['Id_user'].nunique()
+    usuarios_churn = data[data['Churn'] == 1]['Id_user'].nunique()
+    tasa_churn = (usuarios_churn / total_usuarios) * 100
+    tasa = round(tasa_churn, 2)
+    return tasa
+
+def usuarios_totales():
+    total_usuarios = data['Id_user'].nunique()
+    format_total = f"{total_usuarios:,}".replace(".", ",")
+    return format_total
