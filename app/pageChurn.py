@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import datetime
+from kpis import *
 
 def pageChurn():
         containerFiltros = st.container(border=True)
@@ -15,68 +16,27 @@ def pageChurn():
         with col1:
             container = st.container(border=True)
             container.text("Abandono por grupo de edad")
-            container.bar_chart(
-                 {
-                    "18-25": 20,
-                    "26-35": 30,
-                    "36-45": 25,
-                    "46-55": 15,
-                    "56+": 10    
-                 }
-            )
-
-            container1 = st.container(border=True)
-            container1.text("Churn por canal de creación de la cuenta (con género)")
-            container1.bar_chart(
-                 {
-                    "Orgánico - Mujer": [5, 10, 15, 20, 25],
-                    "Orgánico - Hombre": [10, 15, 20, 25, 30],
-                    "Publicidad - Mujer": [3, 6, 9, 12, 15],
-                    "Publicidad - Hombre": [4, 8, 12, 16, 20]
-                 }
-            )
+            fig = kpi_abandono_por_edad()
+            container.plotly_chart(fig)
 
         with col2:
             container2 = st.container(border=True)
-            container2.text("Motivos de llamada asociados al churn")
-            container2.bar_chart(
-                    {
-                        "Problemas técnicos": 40,
-                        "Facturación": 25,
-                        "Atención al cliente": 20,
-                        "Competencia": 15    
-                    }
-            )
+            container2.text("Motivos de llamada previo al churn")
+            fig2 = kpi_motivos_de_llamada_previo_al_churn()
+            container2.plotly_chart(fig2)
 
             container3 = st.container(border=True)
             container3.text("Distribución de usuarios por categoría de turno")
-            container3.bar_chart(
-                 {
-                    "Mañana": 35,
-                    "Tarde": 40,
-                    "Noche": 25
-                 }
-            )
+            fig4 = kpi_distribucion_horario()
+            container3.plotly_chart(fig4)
 
         with col3:
             container4 = st.container(border=True)
             container4.text("Churn por nivel de cuenta vs transacciones")
-            container4.bar_chart(
-                 {
-                    "Básica": [10, 15, 20, 25, 30],
-                    "Estándar": [5, 10, 15, 20, 25],
-                    "Premium": [2, 4, 6, 8, 10]
-                 }
-            )
+            fig3 = kpi_churn_por_nivel_de_cuenta()
+            container4.plotly_chart(fig3)
 
             container5 = st.container(border=True)
             container5.text("Churn por canal de atención telefónica")
-            container5.bar_chart(
-                 {
-                    "Canal A": 30,
-                    "Canal B": 25,
-                    "Canal C": 20,
-                    "Canal D": 15,
-                    "Canal E": 10
-                 }
-            )
+            fig5 = kpi_atencion_telefonica()
+            container5.plotly_chart(fig5)
