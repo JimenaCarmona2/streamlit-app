@@ -40,18 +40,6 @@ def pageInfo():
                     options=["Silent", "Parcial", "Complete"],
                     default=["Complete"],
                 )
-                st.markdown(
-                    """
-                    <style>
-                    /* Código para personalizar las opciones seleccionadas en st.multiselect */
-                    .st-ae .st-at button {
-                        background-color: blue;
-                        color: white;
-                    }
-                    </style>
-                    """,
-                    unsafe_allow_html=True
-                )
 
                 st.radio(
                     "Usuarios",
