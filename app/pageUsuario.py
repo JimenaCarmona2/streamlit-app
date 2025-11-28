@@ -145,29 +145,20 @@ def pageUsuario():
 
                             st.markdown(f'<div class="result-box {result_class}" style="height: 320px;"><div class="result-icon">{icon}</div><div class="result-message">{mensaje}</div><div class="result-prob">{prob:.1%}</div><div class="result-recommendation">{recommendation}</div></div>', unsafe_allow_html=True)
                         else:
-                           st.markdown('''
-                                <div class="result-box result-waiting" style="height: 320px;">
-                                    <div class="result-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 50 50" fill="white">
-                                        <path opacity="0.2" d="M25 5a20 20 0 1 0 20 20A20.023 20.023 0 0 0 25 5zm0 36a16 16 0 1 1 16-16 16.019 16.019 0 0 1-16 16z"/>
-                                        <path d="M25 0v10a15 15 0 1 1 -15 15H0a25 25 0 1 0 25-25z">
-                                            <animateTransform attributeType="xml"
-                                            attributeName="transform"
-                                            type="rotate"
-                                            from="0 25 25"
-                                            to="360 25 25"
-                                            dur="1s"
-                                            repeatCount="indefinite"/>
-                                        </path>
-                                        </svg>
+                            st.markdown('''
+                                    <div class="result-box result-waiting" style="height: 320px;">
+                                        <div class="result-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="white">
+                                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.59 5.58L20 12l-8-8z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="result-message">Ingresa los datos</div>
+                                        <div style="font-size: 12px; margin-top: 18px; opacity: 0.9; font-weight: 500; text-align: center; line-height: 1.5;">
+                                            Completa el formulario y haz clic en <b>PREDECIR CHURN</b>
+                                        </div>
                                     </div>
-                                    <div class="result-message">Ingresa los datos</div>
-                                    <div style="font-size: 12px; margin-top: 18px; opacity: 0.9; font-weight: 500; text-align: center; line-height: 1.5;">
-                                        Completa el formulario y haz clic en <b>PREDECIR CHURN</b>
-                                    </div>
-                                </div>
-                            ''', unsafe_allow_html=True)
-                    st.markdown("</div>", unsafe_allow_html=True)
+                                ''', unsafe_allow_html=True)
+
 
 
 
