@@ -20,14 +20,14 @@ def pageInfo():
                 with col_m2:
                     st.container(border=True).metric(label="Meta 2", value="50%")
                 with col_m3:
-                    dato = tasa_de_churn()
-                    st.container(border=True).metric(label="Tasa Actual de Churn", value=f"{dato}%")
+                    usuarios = usuarios_totales()
+                    st.container(border=True).metric(label="Usuarios Totales", value=f"{usuarios}")
 
             col_b1, col_b2 = st.columns(2)
 
             with col_b1:
-                usuarios = usuarios_totales()
-                st.container(border=True).metric(label="Usuarios Totales", value=f"{usuarios}")
+                dato = tasa_de_churn()
+                st.container(border=True).metric(label="Usuarios en Churn", value=f"{dato}")
             with col_b2:
                 st.container(border=True).metric(label="Rendimiento", value="$1,234,567")
 

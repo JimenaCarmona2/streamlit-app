@@ -1,64 +1,50 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import plotly.express as px
-import seaborn as sns
 
 data = pd.read_parquet("app/data/df_ml_final.parquet")
-
-# solo para los kpis con churn 
 data_churn = data[data["Churn"] == 1].reset_index(drop=True)
 
 def kpi_abandono_por_edad():
-    tabla = data.groupby(['Cat_age', 'Churn']).size().reset_index(name='Usuarios')
-    colores = ["#6586f0", "#3dace7"]
+    tabla = data_churn.groupby(['Cat_age', 'Churn']).size().reset_index(name='Usuarios')
+    colores = ["#6586f0"]
 
     fig = px.bar(
         tabla,
         x="Cat_age",
         y="Usuarios",
-        color="Churn",
-        barmode='group',
         color_discrete_sequence=colores,
-        labels={"Cat_age": "Grupo de Edad", "Usuarios": "Número de Usuarios", "Churn": "Churn"},
-        width=500,
-        height=400
+        labels={"Usuarios": "Número de Usuarios"},
+        title="Churn por Grupo de Edad"
     )
 
     fig.update_layout(
-        xaxis_title_font_size=10,
+        xaxis_title = None,
         yaxis_title_font_size=10,
-        legend_title="Churn",
         legend_title_font_size=10,
-        legend_font_size=10,
-        bargap=0.15,
-        template='plotly_white'
+        height=400,
     )
     
     return fig
 
-def kpi_motivos_de_llamada_previo_al_churn():
-    tabla = data.groupby(['Cat_motive', 'Churn']).size().reset_index(name='Usuarios')
-    colores = ["#6586f0", "#3dace7"]
+def kpi_motivos_de_llamada_top3():
+    tabla = data_churn.groupby(['Cat_motive', 'Churn']).size().reset_index(name='Usuarios')
+
+    top3 = tabla.sort_values('Usuarios', ascending=False).head(3)
+    colores = ["#6586f0"]
 
     fig = px.bar(
-        tabla,
+        top3,
         x="Cat_motive",
         y="Usuarios",
-        color="Churn",
-        barmode='group',
         color_discrete_sequence=colores,
-        labels={"Cat_motive": "Motivo de Llamada", "Usuarios": "Número de Usuarios", "Churn": "Churn"},
-        width=500,
-        height=400
+        labels={"Usuarios": "Número de Usuarios"},
+        title="Motivos de Llamada Previos al Churn",
     )
     fig.update_layout(
-        xaxis_title_font_size=10,
+        xaxis_title = None,
         yaxis_title_font_size=10,
-        legend_title="Churn",
         legend_title_font_size=10,
-        legend_font_size=10,
-        bargap=0.15,
-        template='plotly_white'
+        height=400
     )
     
     return fig
@@ -68,94 +54,66 @@ def kpi_churn_por_nivel_de_cuenta():
     labels = ['0 - 1000', '1000 - 3000', '3000+']
     data_churn['Rangos_Trnx'] = pd.cut(data_churn['Trnx'], bins=bins, labels=labels)
 
-    datos = data_churn.groupby(['Qualification', 'Rangos_Trnx'])['Id_user'].nunique().reset_index(name='Usuarios')
-    u_totales = datos.groupby('Qualification', as_index=False)['Usuarios'].sum().rename(columns={'Usuarios': 'Total_Usuarios'})
-    
-    datos = datos.merge(u_totales)
-    datos = datos.sort_values(['Qualification', 'Rangos_Trnx'])
-    colores = ["#6586f0", "#3dace7", "#588af7"]
+    datos = data_churn.groupby(['Rangos_Trnx'])['Id_user'].nunique().reset_index(name='Usuarios')
 
-    fig = px.bar(
-        datos,
-        x='Qualification',
-        y='Usuarios',
-        color='Rangos_Trnx',
-        barmode='group',
-        color_discrete_sequence=colores,
-        text='Usuarios',
-        width=500,
-        height=500
-    )
-    fig.update_traces(textposition='outside')
-    fig.update_layout(
-        xaxis_title_font_size=10,
-        yaxis_title_font_size=10,
-        legend_title="Rangos de Transacciones",
-        legend_title_font_size=10,
-        legend_font_size=10,
-        bargap=0.15,
-        template='plotly_white'
-    )
-
-    return fig
+    resultado = {
+        row['Rangos_Trnx']: int(row['Usuarios'])
+        for _, row in datos.iterrows()
+    }
+    return resultado
 
 def kpi_distribucion_horario():
 
-    tabla = data['Cat_turn'].value_counts()
+    tabla = data_churn['Cat_turn'].value_counts()
     colors = ["#c6dbef", "#6baed6", "#2171b5"]
     
     fig = px.pie(
         names=tabla.index,
         values=tabla.values,
         color_discrete_sequence=colors,
-        width=500,
-        height=500
+        title="Distribución de Usuarios por Categoría de Turno",
     )
-    fig.update_traces(textposition='inside', textinfo='percent+label')
-    fig.update_layout(
-        legend_title="Categoría de Turno",
-        legend_title_font_size=10,
-        legend_font_size=10,
-        template='plotly_white'
-    )
+    fig.update_traces(textinfo='percent+label')
+    fig.update_layout(showlegend=False, height=400)
 
     return fig
 
 def kpi_atencion_telefonica():
-    tabla = data.groupby(['Por_que_canal_nos_esta_contactando', 'Churn']).size().reset_index(name='Usuarios')
-    colores = ["#6586f0", "#3dace7"]
+    tabla = data_churn.groupby(['Por_que_canal_nos_esta_contactando', 'Churn']).size().reset_index(name='Usuarios')
+    colores = ["#6586f0", "#65DDF0", "#9E65F0"]
 
-    fig = px.bar(
+    fig = px.pie(
         tabla,
-        x="Por_que_canal_nos_esta_contactando",
-        y="Usuarios",
-        color="Churn",
-        barmode='group',
+        names="Por_que_canal_nos_esta_contactando",
+        values="Usuarios",
         color_discrete_sequence=colores,
-        labels={"Por_que_canal_nos_esta_contactando": "Canal de Atención Telefónica", "Usuarios": "Número de Usuarios", "Churn": "Churn"},
-        width=500,
-        height=400
+        title="Churn por Canal de Atención Telefónica",
+        hole=0.5,
     )
     fig.update_layout(
-        xaxis_title_font_size=10,
-        yaxis_title_font_size=10,
-        legend_title="Churn",
+        title_font_size=16,
+        legend_title="Canal",
         legend_title_font_size=10,
         legend_font_size=10,
-        bargap=0.15,
-        template='plotly_white'
+        height=400
     )
     return fig
 
 # Métricas
 def tasa_de_churn():
     total_usuarios = data['Id_user'].nunique()
-    usuarios_churn = data[data['Churn'] == 1]['Id_user'].nunique()
+    usuarios_churn = data_churn['Id_user'].nunique()
+    format_churn = f"{usuarios_churn:,}".replace(".", ",")
     tasa_churn = (usuarios_churn / total_usuarios) * 100
     tasa = round(tasa_churn, 2)
-    return tasa
+    return format_churn + f" ({tasa}%)"
 
 def usuarios_totales():
     total_usuarios = data['Id_user'].nunique()
     format_total = f"{total_usuarios:,}".replace(".", ",")
     return format_total
+
+def usuarios_female():
+    total_female = data[data['Gender'] == 'F']['Id_user'].nunique()
+    format_female = f"{total_female:,}".replace(".", ",")
+    return format_female
