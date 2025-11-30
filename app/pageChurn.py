@@ -1,6 +1,5 @@
 import streamlit as st
-from datetime import datetime
-from kpis import *
+from funciones_BD import *
 
 def pageChurn():
     cont_principal = st.container()

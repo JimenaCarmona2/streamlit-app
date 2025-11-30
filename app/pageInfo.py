@@ -1,6 +1,6 @@
 import streamlit as st
 from datetime import datetime
-from kpis import *
+from funciones_BD import *
 
 def pageInfo():
     cont_principal = st.container()
@@ -59,12 +59,8 @@ def pageInfo():
     with col4_1:
 
         container3 = st.container(border=True)
-        container3.text("Churn en el tiempo")
-        container3.line_chart(
-            {
-                "Tasa de Churn": [36, 35, 23, 26, 18, 17, 20,10,7,0]
-            }
-        )
+        fig1 = churn_en_el_tiempo()
+        container3.plotly_chart(fig1, use_container_width=True)
 
     with col5:
         container5 = st.container(border=True)
@@ -77,9 +73,5 @@ def pageInfo():
 
     with col6:
         container7 = st.container(border=True)
-        container7.text("Calificación Call Center")
-        container7.bar_chart(
-            {
-                "Ingresos": [3, 2, 1, 4, 5]
-            }
-        )
+        fig3 = calificacion_call_center()
+        container7.plotly_chart(fig3, use_container_width=True)
