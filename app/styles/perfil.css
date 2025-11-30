@@ -81,10 +81,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;     /* <- centra todo verticalmente */
+    justify-content: center;    
     color: white;
     font-weight: bold;
-    height: 320px;               /* <- ALTURA FIJA GLOBAL */
+    height: 320px;              
     width: 100%;
     text-align: center;
 
@@ -95,7 +95,7 @@
     line-height: 1.3;
     box-shadow: 0 4px 20px rgba(0,0,0,0.12);
     position: relative;
-    overflow: hidden;            /* <- evita desbordes feos */
+    overflow: hidden;           
 }
 
 .result-box::before {
@@ -127,12 +127,12 @@
 
 .result-message {
     font-size: 18px;
-    margin-bottom: 6px;     /* antes 14px */
+    margin-bottom: 6px;    
     font-weight: 800;
     letter-spacing: 0.5px;
     text-align: center;
     word-break: break-word;
-    line-height: 1.15;      /* antes 1.5 */
+    line-height: 1.15;     
 }
 
 .result-prob {
@@ -140,20 +140,20 @@
     font-weight: 900;
     margin-top: 10px;
     background: rgba(255,255,255,0.16);
-    padding: 10px 24px;     /* antes 18px 40px */
+    padding: 10px 24px;   
     border-radius: 12px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.25);
-    max-width: 80%;         /* evita que se salga horizontalmente */
+    max-width: 80%;         
     text-align: center;
 }
 
 
 .result-recommendation {
     font-size: 12px;
-    margin-top: 8px;          /* antes 14px */
+    margin-top: 8px;          
     font-weight: 500;
-    line-height: 1.2;         /* antes 1.5 */
+    line-height: 1.2;     
     white-space: normal;
     word-break: break-word;
     text-align: center;
@@ -194,4 +194,60 @@
     letter-spacing: 1.2px;
     margin-bottom: 16px;
     margin-top: 0;
+}
+
+.stButton > button {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    border: none !important;
+    background: transparent !important;
+    color: #0369a1 !important;
+    padding: 4px !important;
+    transition: transform 0.2s ease;
+}
+.stButton > button:hover {
+    transform: scale(1.2);
+    color: #0c4a6e !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.uniform-card {
+    transform: scale(1);
+    opacity: 1;
+    height: 180px;
+    transition: all 0.3s ease;
+}
+
+.arrow-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding-top: 40px; 
+}
+
+.arrow-btn {
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #0369a1;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+    padding: 4px 12px;
+}
+
+.arrow-btn:hover {
+    transform: scale(1.3);
+    color: #0c4a6e;
+}
+
+button[kind="primary"] {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    height: 0px !important;
+    overflow: hidden;
+    color: transparent;
 }
