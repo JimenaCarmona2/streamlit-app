@@ -73,7 +73,7 @@ def kpi_distribucion_horario():
         names=tabla.index,
         values=tabla.values,
         color_discrete_sequence=colors,
-        title="Distribución de Usuarios por Categoría de Turno",
+        title="Churn de Usuarios por Turno",
     )
     fig.update_traces(textinfo='percent+label')
     fig.update_layout(showlegend=False, height=400)
@@ -89,7 +89,7 @@ def kpi_atencion_telefonica():
         names="Por_que_canal_nos_esta_contactando",
         values="Usuarios",
         color_discrete_sequence=colores,
-        title="Churn por Canal de Atención Telefónica",
+        title="Churn por Canal de Atención",
         hole=0.5,
     )
     fig.update_layout(
@@ -136,11 +136,15 @@ def costo_por_cliente():
 def calificacion_call_center():
     tabla = data['Respcsat'].value_counts().reset_index()
     tabla.columns = ['Calificación', 'Cantidad']
+
+    tabla = tabla.drop(tabla[tabla['Calificación'] == 0].index)
+
     colores = ["#6586f0", "#65DDF0", "#9E65F0", "#F065E1", "#F06565"]
     fig = px.bar(
         tabla,
         x='Calificación',
         y='Cantidad',
+        #color='Calificación',
         color_discrete_sequence=colores,
         title='Calificación del Call Center',
     )
@@ -148,7 +152,8 @@ def calificacion_call_center():
         xaxis_title=None,
         yaxis_title_font_size=10,
         legend_title_font_size=10,
-        height=400
+        height=400,
+        showlegend=False
     )
     return fig
 
