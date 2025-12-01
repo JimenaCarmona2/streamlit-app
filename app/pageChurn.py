@@ -1,6 +1,5 @@
 import streamlit as st
-from datetime import datetime
-from kpis import *
+from funciones_BD import *
 
 def pageChurn():
     cont_principal = st.container()
@@ -57,16 +56,17 @@ def pageChurn():
         cont1.plotly_chart(fig1, use_container_width=True)
 
     with col2:
-        cont2 = st.container(border=True)
-        fig2 = kpi_motivos_de_llamada_top3()
-        cont2.plotly_chart(fig2, use_container_width=True)
-
-    with col3:
         cont5 = st.container(border=True)
         fig5 = kpi_atencion_telefonica()
         cont5.plotly_chart(fig5, use_container_width=True)
-    
-    with col4:
+
+    with col3:
         cont4 = st.container(border=True)
         fig4 = kpi_distribucion_horario()
-        cont4.plotly_chart(fig4, use_container_width=True)    
+        cont4.plotly_chart(fig4, use_container_width=True) 
+        
+    with col4:
+          
+        cont2 = st.container(border=True)
+        fig2 = kpi_motivos_de_llamada_top3()
+        cont2.plotly_chart(fig2, use_container_width=True) 

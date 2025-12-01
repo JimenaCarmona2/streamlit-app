@@ -3,6 +3,10 @@ from example_extra import example
 from pageInfo import pageInfo
 from pageChurn import pageChurn
 from pageUsuario import pageUsuario
+from funciones_BD import cargar_data
+
+if "data" not in st.session_state:
+    st.session_state["data"], st.session_state["data_churn"] = cargar_data()
 
 st.set_page_config(
     page_title="DanuCard - Churn Prediction & Retention Intelligence",

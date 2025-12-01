@@ -4,6 +4,11 @@ import plotly.express as px
 data = pd.read_parquet("app/data/df_ml_final.parquet")
 data_churn = data[data["Churn"] == 1].reset_index(drop=True)
 
+def cargar_data():
+    return data, data_churn
+
+# pageChurn
+
 def kpi_abandono_por_edad():
     tabla = data_churn.groupby(['Cat_age', 'Churn']).size().reset_index(name='Usuarios')
     colores = ["#6586f0"]
@@ -71,7 +76,7 @@ def kpi_distribucion_horario():
         names=tabla.index,
         values=tabla.values,
         color_discrete_sequence=colors,
-        title="Distribución de Usuarios por Categoría de Turno",
+        title="Churn de Usuarios por Turno",
     )
     fig.update_traces(textinfo='percent+label')
     fig.update_layout(showlegend=False, height=400)
@@ -87,7 +92,7 @@ def kpi_atencion_telefonica():
         names="Por_que_canal_nos_esta_contactando",
         values="Usuarios",
         color_discrete_sequence=colores,
-        title="Churn por Canal de Atención Telefónica",
+        title="Churn por Canal de Atención",
         hole=0.5,
     )
     fig.update_layout(
@@ -99,14 +104,100 @@ def kpi_atencion_telefonica():
     )
     return fig
 
+# pageInfo
+
+# Gráficas
+def churn_en_el_tiempo():
+    data_temp = data.dropna(subset=['Fecha']).copy()
+    data_temp['Fecha_Mes'] = data_temp['Fecha'].dt.to_period('M')
+
+    tabla = data_temp.groupby('Fecha_Mes')['Churn'].mean().reset_index()
+    tabla['Churn_Rate'] = tabla['Churn'] * 100
+
+    tabla = tabla.sort_values('Fecha_Mes')
+
+    tabla['Fecha_Mes_dt'] = tabla['Fecha_Mes'].dt.to_timestamp()
+    fig = px.line(
+        tabla,
+        x='Fecha_Mes_dt',
+        y='Churn_Rate',
+        markers=True,
+        labels={'Fecha_Mes_str': 'Mes', 'Churn_Rate': 'Tasa de Churn (%)'},
+        title='Churn en el Tiempo',
+    )
+    fig.update_layout(
+        xaxis_title=None,
+        yaxis_title_font_size=10,
+        legend_title_font_size=10,
+        height=400
+    )
+    return fig
+
+def costo_por_cliente():
+    pass
+
+def calificacion_call_center(df):
+    tabla = df['Respcsat'].value_counts().reset_index()
+    tabla.columns = ['Calificación', 'Cantidad']
+
+    tabla = tabla.drop(tabla[tabla['Calificación'] == 0].index)
+
+    colores = ["#6586f0", "#65DDF0", "#9E65F0", "#F065E1", "#F06565"]
+    fig = px.bar(
+        tabla,
+        x='Calificación',
+        y='Cantidad',
+        #color='Calificación',
+        color_discrete_sequence=colores,
+        title='Calificación del Call Center',
+    )
+    fig.update_layout(
+        xaxis_title=None,
+        yaxis_title_font_size=10,
+        legend_title_font_size=10,
+        height=400,
+        showlegend=False
+    )
+    return fig
+
 # Métricas
+
+def filtrar_genero(df, genero):
+    if genero == "Mujeres":
+        return df[df['Gender'] == 'female']
+    elif genero == "Hombres":
+        return df[df['Gender'] == 'male']
+    else:
+        return df
+    
 def tasa_de_churn():
     total_usuarios = data['Id_user'].nunique()
     usuarios_churn = data_churn['Id_user'].nunique()
     format_churn = f"{usuarios_churn:,}".replace(".", ",")
+    tasa_churn = round((usuarios_churn / total_usuarios) * 100, 2)
+    return format_churn + f" ({tasa_churn}%)"
+
+def tasa_churnF():
+    total_usuarios = data[data['Gender'] == 'female']['Id_user'].nunique()
+    usuarios_churn = data_churn[data_churn['Gender'] == 'female']['Id_user'].nunique()
+    format_churn = f"{usuarios_churn:,}".replace(".", ",")
     tasa_churn = (usuarios_churn / total_usuarios) * 100
     tasa = round(tasa_churn, 2)
     return format_churn + f" ({tasa}%)"
+
+def tasa_churnM():
+    total_usuarios = data[data['Gender'] == 'male']['Id_user'].nunique()
+    usuarios_churn = data_churn[data_churn['Gender'] == 'male']['Id_user'].nunique()
+    format_churn = f"{usuarios_churn:,}".replace(".", ",")
+    tasa_churn = (usuarios_churn / total_usuarios) * 100
+    tasa = round(tasa_churn, 2)
+    return format_churn + f" ({tasa}%)"
+
+def meta_1():
+    pass
+
+def meta_2():
+    pass
 
 def usuarios_totales():
     total_usuarios = data['Id_user'].nunique()
@@ -114,6 +205,11 @@ def usuarios_totales():
     return format_total
 
 def usuarios_female():
-    total_female = data[data['Gender'] == 'F']['Id_user'].nunique()
+    total_female = data[data['Gender'] == 'female']['Id_user'].nunique()
     format_female = f"{total_female:,}".replace(".", ",")
     return format_female
+
+def usuarios_male():
+    total_male = data[data['Gender'] == 'male']['Id_user'].nunique()
+    format_male = f"{total_male:,}".replace(".", ",")
+    return format_male
