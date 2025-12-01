@@ -3,36 +3,13 @@ from datetime import datetime
 from funciones_BD import *
 
 def pageInfo():
+    df = st.session_state["data"]
+    df_churn = st.session_state["data_churn"]
+
     cont_principal = st.container()
 
     with cont_principal:
         col_left, col_right = st.columns([0.7, 0.347])
-
-        with col_left:
-            cont_left = st.container()
-
-            with cont_left:
-                st.write("")
-                col_m1, col_m2, col_m3 = st.columns(3)
-
-                with col_m1:
-                    st.container(border=True).text("Meta 1")
-                    # st.metric(label="Meta 1", value="82%")
-                with col_m2:
-                    st.container(border=True).text("Meta 2")
-                    # st.metric(label="Meta 2", value="50%")
-                with col_m3:
-                    usuarios = usuarios_totales()
-                    st.container(border=True).metric(label="Usuarios Totales", value=f"{usuarios}")
-
-            col_b1, col_b2 = st.columns(2)
-
-            with col_b1:
-                dato = tasa_de_churn()
-                st.container(border=True).metric(label="Usuarios en Churn", value=f"{dato}")
-            with col_b2:
-                st.container(border=True).text("Rendimiento")
-                # st.metric(label="Rendimiento", value="$1,234,567")
 
         with col_right:
             contFiltros = st.container(border=True)
@@ -43,16 +20,18 @@ def pageInfo():
                 with contFil:
                     f1, f2 = st.columns(2)
                     with f1:
-                        st.radio(
+                        genero = st.radio(
                             "Usuarios",
                             options=["Ambos", "Mujeres", "Hombres"],
-                            horizontal=True
+                            horizontal=True,
+                            key="filtro_usuario"
                         )
                     with f2:
                         st.radio(
                             "Calificación Call Center",
                             options=["No churn", "Churn"],
-                            horizontal=True
+                            horizontal=True,
+                            key="filtro_calificacion"
                         )
 
                 fil1, fil2 = st.columns(2)
@@ -83,6 +62,51 @@ def pageInfo():
                         key="año_fin_churn"
                     )
 
+        with col_left:
+            cont_left = st.container()
+
+            with cont_left:
+                st.write("")
+                col_m1, col_m2, col_m3 = st.columns(3)
+
+                with col_m1:
+                    st.container(border=True).text("Meta 1")
+                    # st.metric(label="Meta 1", value="82%")
+                with col_m2:
+                    st.container(border=True).text("Meta 2")
+                    # st.metric(label="Meta 2", value="50%")
+                with col_m3:
+                    filtro = st.session_state["filtro_usuario"]
+                    if filtro == "Ambos":
+                        usuarios = usuarios_totales()
+                        label = "Usuarios Totales"
+                    elif filtro == "Mujeres":
+                        usuarios = usuarios_female()
+                        label = "Usuarias Mujeres"
+                    elif filtro == "Hombres":
+                        usuarios = usuarios_male()
+                        label = "Usuarios Hombres"
+                    st.container(border=True).metric(label=label, value=usuarios)
+
+            col_b1, col_b2 = st.columns(2)
+
+            with col_b1:
+                filtroC = st.session_state["filtro_usuario"]
+                if filtroC == "Ambos":
+                    dato = tasa_de_churn()
+                    label = "Usuarios en Churn"
+                elif filtroC == "Mujeres":
+                    dato = tasa_churnF()
+                    label = "Usuarios en Churn (Mujeres)"
+                elif filtroC == "Hombres":
+                    dato = tasa_churnM()
+                    label = "Usuarios en Churn (Hombres)"
+                st.container(border=True).metric(label=label, value=dato)
+            with col_b2:
+                st.container(border=True).text("Rendimiento")
+                # st.metric(label="Rendimiento", value="$1,234,567")
+
+
     col4_1, col5, col6 = st.columns(3)
     with col4_1:
 
@@ -101,5 +125,11 @@ def pageInfo():
 
     with col6:
         container7 = st.container(border=True)
-        fig3 = calificacion_call_center()
+        filtroCC = st.session_state["filtro_calificacion"]
+        if filtroCC == "No churn":
+            df_call = df
+        else:
+            df_call = df_churn
+            
+        fig3 = calificacion_call_center(df_call)
         container7.plotly_chart(fig3, use_container_width=True)

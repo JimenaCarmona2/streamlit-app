@@ -4,6 +4,9 @@ import plotly.express as px
 data = pd.read_parquet("app/data/df_ml_final.parquet")
 data_churn = data[data["Churn"] == 1].reset_index(drop=True)
 
+def cargar_data():
+    return data, data_churn
+
 # pageChurn
 
 def kpi_abandono_por_edad():
@@ -133,8 +136,8 @@ def churn_en_el_tiempo():
 def costo_por_cliente():
     pass
 
-def calificacion_call_center():
-    tabla = data['Respcsat'].value_counts().reset_index()
+def calificacion_call_center(df):
+    tabla = df['Respcsat'].value_counts().reset_index()
     tabla.columns = ['Calificación', 'Cantidad']
 
     tabla = tabla.drop(tabla[tabla['Calificación'] == 0].index)
@@ -158,9 +161,33 @@ def calificacion_call_center():
     return fig
 
 # Métricas
+
+def filtrar_genero(df, genero):
+    if genero == "Mujeres":
+        return df[df['Gender'] == 'female']
+    elif genero == "Hombres":
+        return df[df['Gender'] == 'male']
+    else:
+        return df
+    
 def tasa_de_churn():
     total_usuarios = data['Id_user'].nunique()
     usuarios_churn = data_churn['Id_user'].nunique()
+    format_churn = f"{usuarios_churn:,}".replace(".", ",")
+    tasa_churn = round((usuarios_churn / total_usuarios) * 100, 2)
+    return format_churn + f" ({tasa_churn}%)"
+
+def tasa_churnF():
+    total_usuarios = data[data['Gender'] == 'female']['Id_user'].nunique()
+    usuarios_churn = data_churn[data_churn['Gender'] == 'female']['Id_user'].nunique()
+    format_churn = f"{usuarios_churn:,}".replace(".", ",")
+    tasa_churn = (usuarios_churn / total_usuarios) * 100
+    tasa = round(tasa_churn, 2)
+    return format_churn + f" ({tasa}%)"
+
+def tasa_churnM():
+    total_usuarios = data[data['Gender'] == 'male']['Id_user'].nunique()
+    usuarios_churn = data_churn[data_churn['Gender'] == 'male']['Id_user'].nunique()
     format_churn = f"{usuarios_churn:,}".replace(".", ",")
     tasa_churn = (usuarios_churn / total_usuarios) * 100
     tasa = round(tasa_churn, 2)
@@ -178,11 +205,11 @@ def usuarios_totales():
     return format_total
 
 def usuarios_female():
-    total_female = data[data['Gender'] == 'F']['Id_user'].nunique()
+    total_female = data[data['Gender'] == 'female']['Id_user'].nunique()
     format_female = f"{total_female:,}".replace(".", ",")
     return format_female
 
 def usuarios_male():
-    total_male = data[data['Gender'] == 'M']['Id_user'].nunique()
+    total_male = data[data['Gender'] == 'male']['Id_user'].nunique()
     format_male = f"{total_male:,}".replace(".", ",")
     return format_male
