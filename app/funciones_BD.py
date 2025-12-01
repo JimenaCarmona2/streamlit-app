@@ -194,10 +194,23 @@ def tasa_churnM():
     return format_churn + f" ({tasa}%)"
 
 def meta_1():
-    pass
+    df_sat = data.dropna(subset=['Respcsat']).copy()
+    kpi_general = (df_sat["Respcsat"] <= 3).mean() * 100
+    tasa = round(kpi_general, 2)
+    return f"{tasa}%"
 
 def meta_2():
-    pass
+    df_tx = data.dropna(subset=['Trnx', "Id_user"]).copy()
+    total_trnx = df_tx["Trnx"].sum()
+    usuarios_act = df_tx["Id_user"].nunique()
+
+    if usuarios_act == 0:
+        frecuencia = 0
+    else:
+        frecuencia = round(total_trnx / usuarios_act, 0)
+    
+    return f"{frecuencia}"
+
 
 def usuarios_totales():
     total_usuarios = data['Id_user'].nunique()

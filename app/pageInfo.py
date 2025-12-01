@@ -70,11 +70,12 @@ def pageInfo():
                 col_m1, col_m2, col_m3 = st.columns(3)
 
                 with col_m1:
-                    st.container(border=True).text("Meta 1")
-                    # st.metric(label="Meta 1", value="82%")
+                    meta1 = meta_1()
+                    st.container(border=True).metric(label="Satisfacción baja del cliente", value=meta1)
+                    
                 with col_m2:
-                    st.container(border=True).text("Meta 2")
-                    # st.metric(label="Meta 2", value="50%")
+                    meta2 = meta_2()
+                    st.container(border=True).metric(label="Frecuencia de Uso", value=meta2)
                 with col_m3:
                     filtro = st.session_state["filtro_usuario"]
                     if filtro == "Ambos":
