@@ -45,9 +45,9 @@ def example():
         st.markdown("""
             <div class="phase-container phase-2">
                 <div class="phase-number">02</div>
-                <div class="phase-title">Emotional AI Banking </div>
+                <div class="phase-title">Digital Twin</div>
                 <div class="phase-description">
-                    Se integran tecnologías de inteligencia artificial para detectar señales de abandono y activar respuestas automáticas que mejoran la retención.
+                    Se implementa un modelo digital que simula decisiones del cliente para anticipar comportamientos y prevenir el abandono de forma proactiva.
                 </div>
             </div>
         """, unsafe_allow_html=True)
@@ -56,9 +56,9 @@ def example():
         st.markdown("""
             <div class="phase-container phase-3">
                 <div class="phase-number">03</div>
-                <div class="phase-title">Digital Twin</div>
+                <div class="phase-title">Emotional AI Banking </div>
                 <div class="phase-description">
-                    Se implementa un modelo digital que simula decisiones del cliente para anticipar comportamientos y prevenir el abandono de forma proactiva.
+                    Se integran tecnologías de inteligencia artificial para detectar señales de abandono y activar respuestas automáticas que mejoran la retención.
                 </div>
             </div>
         """, unsafe_allow_html=True)
