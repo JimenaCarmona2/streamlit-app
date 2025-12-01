@@ -161,55 +161,34 @@ def calificacion_call_center(df):
     return fig
 
 # Métricas
-
-def filtrar_genero(df, genero):
-    if genero == "Mujeres":
-        return df[df['Gender'] == 'female']
-    elif genero == "Hombres":
-        return df[df['Gender'] == 'male']
-    else:
-        return df
+def usuarios_totales(df):
+    total_usuarios = df['Id_user'].nunique()
+    format_total = f"{total_usuarios:,}".replace(".", ",")
+    return format_total
     
-def tasa_de_churn():
-    total_usuarios = data['Id_user'].nunique()
-    usuarios_churn = data_churn['Id_user'].nunique()
+def tasa_de_churn(df, df_churn):
+    total_usuarios = df['Id_user'].nunique()
+    usuarios_churn = df_churn['Id_user'].nunique()
     format_churn = f"{usuarios_churn:,}".replace(".", ",")
     tasa_churn = round((usuarios_churn / total_usuarios) * 100, 2)
     return format_churn + f" ({tasa_churn}%)"
 
-def tasa_churnF():
-    total_usuarios = data[data['Gender'] == 'female']['Id_user'].nunique()
-    usuarios_churn = data_churn[data_churn['Gender'] == 'female']['Id_user'].nunique()
-    format_churn = f"{usuarios_churn:,}".replace(".", ",")
-    tasa_churn = (usuarios_churn / total_usuarios) * 100
-    tasa = round(tasa_churn, 2)
-    return format_churn + f" ({tasa}%)"
-
-def tasa_churnM():
-    total_usuarios = data[data['Gender'] == 'male']['Id_user'].nunique()
-    usuarios_churn = data_churn[data_churn['Gender'] == 'male']['Id_user'].nunique()
-    format_churn = f"{usuarios_churn:,}".replace(".", ",")
-    tasa_churn = (usuarios_churn / total_usuarios) * 100
-    tasa = round(tasa_churn, 2)
-    return format_churn + f" ({tasa}%)"
-
 def meta_1():
-    pass
+    df_sat = data.dropna(subset=['Respcsat']).copy()
+    kpi_general = (df_sat["Respcsat"] <= 3).mean() * 100
+    tasa = round(kpi_general, 2)
+    return f"{tasa}%"
 
 def meta_2():
-    pass
+    df_tx = data.dropna(subset=['Trnx', "Id_user"]).copy()
+    total_trnx = df_tx["Trnx"].sum()
+    usuarios_act = df_tx["Id_user"].nunique()
 
-def usuarios_totales():
-    total_usuarios = data['Id_user'].nunique()
-    format_total = f"{total_usuarios:,}".replace(".", ",")
-    return format_total
+    if usuarios_act == 0:
+        frecuencia = 0
+    else:
+        frecuencia = round(total_trnx / usuarios_act, 0)
+    
+    return f"{frecuencia}"
 
-def usuarios_female():
-    total_female = data[data['Gender'] == 'female']['Id_user'].nunique()
-    format_female = f"{total_female:,}".replace(".", ",")
-    return format_female
 
-def usuarios_male():
-    total_male = data[data['Gender'] == 'male']['Id_user'].nunique()
-    format_male = f"{total_male:,}".replace(".", ",")
-    return format_male
