@@ -38,15 +38,31 @@ def pageInfo():
                 fil1, fil2 = st.columns(2)
                 with fil1:
                     with st.expander("De:", expanded=False):
+                        df["Fecha"] = pd.to_datetime(df["Fecha"], errors='coerce')
+                        df = df.dropna(subset=['Fecha'])
+
+                        df["mes"] = df["Fecha"].dt.strftime("%m")
+                        df["año"] = df["Fecha"].dt.strftime("%Y")
+
+                        meses_base = sorted(df["mes"].unique().tolist())
+                        año_base = sorted(df["año"].unique().tolist())
+
+                        mes_inicio_default = meses_base[0]
+                        año_inicio_default = año_base[0]
+
+                        mes_fin_default = meses_base[-1]
+                        año_fin_default = año_base[-1]
+
                         st.selectbox(
                             "Mes",
-                            options=["01","02","03","04","05","06",
-                                     "07","08","09","10","11","12"],
+                            options=meses_base,
+                            index=meses_base.index(mes_inicio_default),
                             key="mes_inicio_churn"
                         )
                         st.selectbox(
                             "Año",
-                            options=["2022", "2023"],
+                            index=año_base.index(año_inicio_default),
+                            options=año_base,
                             key="año_inicio_churn"
                         )
                     
@@ -54,13 +70,14 @@ def pageInfo():
                     with st.expander("A:", expanded=False):
                         st.selectbox(
                             "Mes",
-                            options=["01","02","03","04","05","06",
-                                    "07","08","09","10","11","12"],
+                            options=meses_base,
+                            index=meses_base.index(mes_fin_default),
                             key="mes_fin_churn"
                         )
                         st.selectbox(
                             "Año",
-                            options=["2022", "2023"],
+                            options=año_base,
+                            index=año_base.index(año_fin_default),
                             key="año_fin_churn"
                         )
 
