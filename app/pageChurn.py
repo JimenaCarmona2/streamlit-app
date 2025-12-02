@@ -16,46 +16,30 @@ def pageChurn():
                     st.write("De:")
 
                     df["Fecha"] = pd.to_datetime(df["Fecha"], errors='coerce')
-                    df = df.dropna(subset=['Fecha'])
+                    df_time = df.dropna(subset=['Fecha']).copy()
 
-                    df["mes"] = df["Fecha"].dt.strftime("%m")
-                    df["año"] = df["Fecha"].dt.strftime("%Y")
+                    df_time["periodo"] = df_time["Fecha"].dt.to_period("M")
+                    periodos = sorted(df_time["periodo"].unique())
+                    periodos_str = [str(p) for p in periodos]
 
-                    meses_base = sorted(df["mes"].unique().tolist())
-                    año_base = sorted(df["año"].unique().tolist())
-
-                    mes_inicio_default = meses_base[0]
-                    anio_inicio_default = año_base[0]
-
-                    mes_fin_default = meses_base[-1]
-                    anio_fin_default = año_base[-1]
+                    inicio_default = periodos_str[0]
+                    fin_default = periodos_str[-1]
                     
                     st.selectbox(
-                        "Mes",
-                        options=meses_base,
-                        index=meses_base.index(mes_inicio_default),
-                        key="mes_inicio_churn"
-                    )
-                    st.selectbox(
-                        "Año",
-                        options=año_base,
-                        index=año_base.index(anio_inicio_default),
-                        key="año_inicio_churn"
+                        "Inicio",
+                        options=periodos_str,
+                        index=periodos_str.index(inicio_default),
+                        key="per_inicio"
                     )
                 with fil2:
                     st.write("A:")
                     st.selectbox(
-                        "Mes",
-                        options=meses_base,
-                        index=meses_base.index(mes_fin_default),
-                        key="mes_fin_churn"
+                        "Fin",
+                        options=periodos_str,
+                        index=periodos_str.index(fin_default),
+                        key="per_fin"
                     )
-                    st.selectbox(
-                        "Año",
-                        options=año_base,
-                        index=año_base.index(anio_fin_default),
-                        key="año_fin_churn"
-                    )
+
         with kpi:
             container_kpi = st.container()
             with container_kpi:
@@ -71,23 +55,26 @@ def pageChurn():
 
     col1, col2, col3, col4 = st.columns(4)
 
+    per_inicio = st.session_state["per_inicio"]
+    per_fin = st.session_state["per_fin"]
+
     with col1:
         cont1 = st.container(border=True)
-        fig1 = kpi_abandono_por_edad()
+        fig1 = kpi_abandono_por_edad(per_inicio, per_fin)
         cont1.plotly_chart(fig1, use_container_width=True)
 
     with col2:
         cont5 = st.container(border=True)
-        fig5 = kpi_atencion_telefonica()
+        fig5 = kpi_atencion_telefonica(per_inicio, per_fin)
         cont5.plotly_chart(fig5, use_container_width=True)
 
     with col3:
         cont4 = st.container(border=True)
-        fig4 = kpi_distribucion_horario()
+        fig4 = kpi_distribucion_horario(per_inicio, per_fin)
         cont4.plotly_chart(fig4, use_container_width=True) 
         
     with col4:
           
         cont2 = st.container(border=True)
-        fig2 = kpi_motivos_de_llamada_top3()
+        fig2 = kpi_motivos_de_llamada_top3(per_inicio, per_fin)
         cont2.plotly_chart(fig2, use_container_width=True) 

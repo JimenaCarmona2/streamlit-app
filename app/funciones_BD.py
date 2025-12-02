@@ -9,8 +9,26 @@ def cargar_data():
 
 # pageChurn
 
-def kpi_abandono_por_edad():
-    tabla = data_churn.groupby(['Cat_age', 'Churn']).size().reset_index(name='Usuarios')
+def filtrar_por_tiempo(df, per_inicio, per_fin):
+    data = df.copy()
+    data["Fecha"] = pd.to_datetime(data['Fecha'], errors="coerce")
+    #data.loc[data["Fecha"].notna(), "periodo"] = data["Fecha"].dt.to_period('M')
+    #data = data.dropna(subset=["Fecha"])
+
+    data['periodo'] = data['Fecha'].dt.to_period('M')
+    p_ini = pd.Period(per_inicio, freq="M")
+    p_fin = pd.Period(per_fin, freq="M")
+
+    data_filtrada = data[
+        data["periodo"].between(p_ini, p_fin)
+    ].copy()
+    
+    return data_filtrada
+
+def kpi_abandono_por_edad(per_inicio, per_fin):
+    df_f = filtrar_por_tiempo(data_churn, per_inicio, per_fin)
+    
+    tabla = df_f.groupby(['Cat_age', 'Churn']).size().reset_index(name='Usuarios')
     colores = ["#6586f0"]
 
     fig = px.bar(
@@ -31,8 +49,10 @@ def kpi_abandono_por_edad():
     
     return fig
 
-def kpi_motivos_de_llamada_top3():
-    tabla = data_churn.groupby(['Cat_motive', 'Churn']).size().reset_index(name='Usuarios')
+def kpi_motivos_de_llamada_top3(per_inicio, per_fin):
+    df_f = filtrar_por_tiempo(data_churn, per_inicio, per_fin)
+
+    tabla = df_f.groupby(['Cat_motive', 'Churn']).size().reset_index(name='Usuarios')
 
     top3 = tabla.sort_values('Usuarios', ascending=False).head(3)
     colores = ["#6586f0"]
@@ -67,9 +87,10 @@ def kpi_churn_por_nivel_de_cuenta():
     }
     return resultado
 
-def kpi_distribucion_horario():
+def kpi_distribucion_horario(per_inicio, per_fin):
+    df_f = filtrar_por_tiempo(data_churn, per_inicio, per_fin)
 
-    tabla = data_churn['Cat_turn'].value_counts()
+    tabla = df_f['Cat_turn'].value_counts()
     colors = ["#c6dbef", "#6baed6", "#2171b5"]
     
     fig = px.pie(
@@ -83,9 +104,10 @@ def kpi_distribucion_horario():
 
     return fig
 
-def kpi_atencion_telefonica():
-    tabla = data_churn.groupby(['Por_que_canal_nos_esta_contactando', 'Churn']).size().reset_index(name='Usuarios')
-    colores = ["#6586f0", "#65DDF0", "#9E65F0"]
+def kpi_atencion_telefonica(per_inicio, per_fin):
+    df_f = filtrar_por_tiempo(data_churn, per_inicio, per_fin)
+    tabla = df_f.groupby(['Por_que_canal_nos_esta_contactando', 'Churn']).size().reset_index(name='Usuarios')
+    colores = ["#c6dbef", "#6baed6", "#2171b5"]
 
     fig = px.pie(
         tabla,
@@ -95,11 +117,13 @@ def kpi_atencion_telefonica():
         title="Churn por Canal de Atención",
         hole=0.5,
     )
+    fig.update_traces(textinfo='percent+label')
     fig.update_layout(
         title_font_size=16,
         legend_title="Canal",
         legend_title_font_size=10,
         legend_font_size=10,
+        showlegend=False,
         height=400
     )
     return fig
@@ -107,22 +131,28 @@ def kpi_atencion_telefonica():
 # pageInfo
 
 # Gráficas
-def churn_en_el_tiempo():
-    data_temp = data.dropna(subset=['Fecha']).copy()
-    data_temp['Fecha_Mes'] = data_temp['Fecha'].dt.to_period('M')
+def churn_en_el_tiempo(periodo_inicio, periodo_fin):
+    data_temp = data.copy()
+    data_temp["Fecha"] = pd.to_datetime(data_temp['Fecha'], errors="coerce")
+    data_temp = data_temp.dropna(subset=["Fecha"])
 
-    tabla = data_temp.groupby('Fecha_Mes')['Churn'].mean().reset_index()
-    tabla['Churn_Rate'] = tabla['Churn'] * 100
+    data_temp['periodo'] = data_temp['Fecha'].dt.to_period('M')
 
-    tabla = tabla.sort_values('Fecha_Mes')
+    p_inicio = pd.Period(periodo_inicio, freq="M")
+    p_fin = pd.Period(periodo_fin, freq="M")
 
-    tabla['Fecha_Mes_dt'] = tabla['Fecha_Mes'].dt.to_timestamp()
+    df_filt = data_temp[(data_temp["periodo"] >= p_inicio) & (data_temp["periodo"] <= p_fin)]
+
+    tabla = df_filt.groupby("periodo")["Churn"].mean().reset_index()
+    tabla["Churn_Rate"] = tabla["Churn"] * 100
+    tabla["Periodo_str"] = tabla["periodo"].astype(str)
+
     fig = px.line(
         tabla,
-        x='Fecha_Mes_dt',
+        x='Periodo_str',
         y='Churn_Rate',
         markers=True,
-        labels={'Fecha_Mes_str': 'Mes', 'Churn_Rate': 'Tasa de Churn (%)'},
+        labels={'Churn_Rate': 'Churn (%)', 'Periodo_str': 'Periodo'},
         title='Churn en el Tiempo',
     )
     fig.update_layout(
