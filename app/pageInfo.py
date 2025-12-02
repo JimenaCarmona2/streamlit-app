@@ -33,42 +33,42 @@ def pageInfo():
                             horizontal=True,
                             key="filtro_calificacion"
                         )
-                    st.text("Tiempo de Análisis")
+                st.text("Tiempo de Análisis")
+
+                df["Fecha"] = pd.to_datetime(df["Fecha"], errors='coerce')
+                df_time = df.dropna(subset=['Fecha']).copy()
+
+                df_time["periodo"] = df_time["Fecha"].dt.to_period("M")
+                periodos = sorted(df_time["periodo"].unique())
+                periodos_str = [str(p) for p in periodos]
+
+                inicio_default = periodos_str[0]
+                fin_default = periodos_str[-1]
 
                 fil1, fil2 = st.columns(2)
+
                 with fil1:
                     with st.expander("De:", expanded=False):
                         st.selectbox(
-                            "Mes",
-                            options=["01","02","03","04","05","06",
-                                     "07","08","09","10","11","12"],
-                            key="mes_inicio_churn"
-                        )
-                        st.selectbox(
-                            "Año",
-                            options=["2022", "2023"],
-                            key="año_inicio_churn"
+                            "Inicio",
+                            options=periodos_str,
+                            index=periodos_str.index(inicio_default),
+                            key="periodo_inicio"
                         )
                     
                 with fil2:
                     with st.expander("A:", expanded=False):
                         st.selectbox(
-                            "Mes",
-                            options=["01","02","03","04","05","06",
-                                    "07","08","09","10","11","12"],
-                            key="mes_fin_churn"
-                        )
-                        st.selectbox(
-                            "Año",
-                            options=["2022", "2023"],
-                            key="año_fin_churn"
+                            "Fin",
+                            options=periodos_str,
+                            index=periodos_str.index(fin_default),
+                            key="periodo_fin"
                         )
 
         with col_left:
             cont_left = st.container()
 
             with cont_left:
-                #st.write("")
                 col_m1, col_m2, col_m3 = st.columns(3)
 
                 with col_m1:
@@ -78,6 +78,7 @@ def pageInfo():
                 with col_m2:
                     meta2 = meta_2()
                     st.container(border=True).metric(label="Frecuencia de Uso", value=meta2)
+
                 with col_m3:
                     genero = st.session_state["filtro_usuario"]
                     if genero == "Mujeres":
@@ -105,6 +106,7 @@ def pageInfo():
                 
             with col_b2:
                 st.container(border=True).metric(label="Costo por Cliente", value="$1.33")
+
             with col_b3:
                 genero = st.session_state["filtro_usuario"]
                 if genero == "Mujeres":
@@ -118,20 +120,24 @@ def pageInfo():
                     df_churn_gen = df_churn
 
                 usuariosC = tasa_de_churn(df_gen, df_churn_gen)
+
                 if genero == "Ambos":
                     label = "Usuarios en Churn"
                 elif genero == "Mujeres":
                     label = "Usuarios en Churn (Mujeres)"
                 elif genero == "Hombres":
                     label = "Usuarios en Churn (Hombres)"
+
                 st.container(border=True).metric(label=label, value=usuariosC)
 
 
     col4_1, col6 = st.columns(2)
     with col4_1:
+        periodo_inicio = st.session_state["periodo_inicio"]
+        periodo_fin = st.session_state["periodo_fin"]
 
         container3 = st.container(border=True)
-        fig1 = churn_en_el_tiempo()
+        fig1 = churn_en_el_tiempo(periodo_inicio, periodo_fin)
         container3.plotly_chart(fig1, use_container_width=True)
 
     with col6:
