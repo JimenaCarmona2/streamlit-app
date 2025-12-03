@@ -1,10 +1,13 @@
 import streamlit as st
-from datetime import datetime
 from funciones_BD import *
 
 def pageInfo():
     df = st.session_state["data"]
     df_churn = st.session_state["data_churn"]
+
+    with open("app/styles/pageInfo.css") as f:
+        inicio_css = f"<style>{f.read()}</style>"
+        st.markdown(inicio_css, unsafe_allow_html=True)
 
     cont_principal = st.container()
 
@@ -15,6 +18,8 @@ def pageInfo():
             contFiltros = st.container(border=True)
 
             with contFiltros:
+                st.markdown('<div class="filtro-box">', unsafe_allow_html=True)
+
                 contFil = st.container()
 
                 with contFil:
@@ -37,8 +42,8 @@ def pageInfo():
 
                 df["Fecha"] = pd.to_datetime(df["Fecha"], errors='coerce')
                 df_time = df.dropna(subset=['Fecha']).copy()
-
                 df_time["periodo"] = df_time["Fecha"].dt.to_period("M")
+
                 periodos = sorted(df_time["periodo"].unique())
                 periodos_str = [str(p) for p in periodos]
 
@@ -48,22 +53,22 @@ def pageInfo():
                 fil1, fil2 = st.columns(2)
 
                 with fil1:
-                    with st.expander("De:", expanded=False):
-                        st.selectbox(
-                            "Inicio",
-                            options=periodos_str,
-                            index=periodos_str.index(inicio_default),
-                            key="periodo_inicio"
-                        )
+                    st.selectbox(
+                        "Desde:",
+                        options=periodos_str,
+                        index=periodos_str.index(inicio_default),
+                        key="periodo_inicio"
+                    )
                     
                 with fil2:
-                    with st.expander("A:", expanded=False):
-                        st.selectbox(
-                            "Fin",
-                            options=periodos_str,
-                            index=periodos_str.index(fin_default),
-                            key="periodo_fin"
-                        )
+                    st.selectbox(
+                        "Hasta:",
+                        options=periodos_str,
+                        index=periodos_str.index(fin_default),
+                        key="periodo_fin"
+                    )
+
+                st.markdown('</div>', unsafe_allow_html=True)
 
         with col_left:
             cont_left = st.container()
@@ -73,11 +78,26 @@ def pageInfo():
 
                 with col_m1:
                     meta1 = meta_1()
-                    st.container(border=True).metric(label="Satisfacción baja del cliente", value=meta1)
+                    st.markdown(f"""
+                                <div class="metric-card" style="border-left: 4px solid #8a66ff;">
+                                <div class="metric-title">Satisfacción baja del cliente</div>
+                                <div class="metric-value" style="color: #8a66ff;">{meta1}</div>
+                                </div>
+                                """, unsafe_allow_html=True)
+
+                    # with st.container(border=True):
+                    #     st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+                    #     st.metric(label="Satisfacción baja del cliente", value=meta1)
+                    #     st.markdown('</div>', unsafe_allow_html=True)
                     
                 with col_m2:
                     meta2 = meta_2()
-                    st.container(border=True).metric(label="Frecuencia de Uso", value=meta2)
+                    st.markdown(f"""
+                                <div class="metric-card" style="border-left: 4px solid #8a66ff;">
+                                <div class="metric-title">Frecuencia de uso</div>
+                                <div class="metric-value" style="color: #8a66ff;">{meta2}</div>
+                                </div>
+                                """, unsafe_allow_html=True)
 
                 with col_m3:
                     genero = st.session_state["filtro_usuario"]
@@ -97,15 +117,34 @@ def pageInfo():
                     elif genero == "Hombres":
                         label = "Usuarios Hombres"
 
-                    st.container(border=True).metric(label=label, value=usuarios)
+                    #st.container(border=True).metric(label=label, value=usuarios)
+                    st.markdown(f"""
+                                <div class="metric-card" style="border-left: 4px solid #426eff;">
+                                <div class="metric-title">{label}</div>
+                                <div class="metric-value" style="color: #426eff;">{usuarios}</div>
+                                </div>
+                                """, unsafe_allow_html=True)
             
             col_b1, col_b2, col_b3 = st.columns([3,2,3])
 
             with col_b1:
-                st.container(border=True).metric(label="Rendimiento", value="$8,955,000.00")
+                value = formato_miles(2720000)
+                #st.container(border=True).metric(label="Rendimiento", value=f"${value} USD")
+                st.markdown(f"""
+                                <div class="metric-card" style="border-left: 4px solid #3ab64e;">
+                                <div class="metric-title">Rendimiento</div>
+                                <div class="metric-value" style="color: #3ab64e;">{value} USD</div>
+                                </div>
+                                """, unsafe_allow_html=True)
                 
             with col_b2:
-                st.container(border=True).metric(label="Costo por Cliente", value="$1.33")
+                #st.container(border=True).metric(label="Costo por Cliente", value="$1.33 USD")
+                st.markdown(f"""
+                                <div class="metric-card" style="border-left: 4px solid #3ab64e;">
+                                <div class="metric-title">Costo por cliente</div>
+                                <div class="metric-value" style="color: #3ab64e;">{"1.33"} USD</div>
+                                </div>
+                                """, unsafe_allow_html=True)
 
             with col_b3:
                 genero = st.session_state["filtro_usuario"]
@@ -128,7 +167,13 @@ def pageInfo():
                 elif genero == "Hombres":
                     label = "Usuarios en Churn (Hombres)"
 
-                st.container(border=True).metric(label=label, value=usuariosC)
+                #st.container(border=True).metric(label=label, value=usuariosC)
+                st.markdown(f"""
+                                <div class="metric-card" style="border-left: 4px solid #426eff;">
+                                <div class="metric-title">{label}</div>
+                                <div class="metric-value" style="color: #426eff;">{usuariosC}</div>
+                                </div>
+                                """, unsafe_allow_html=True)
 
 
     col4_1, col6 = st.columns(2)

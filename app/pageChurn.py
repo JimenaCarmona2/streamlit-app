@@ -5,16 +5,19 @@ def pageChurn():
     df = st.session_state["data"]
     df_churn = st.session_state["data_churn"]
 
+    with open("app/styles/pageChurn.css") as f:
+        inicio_css = f"<style>{f.read()}</style>"
+        st.markdown(inicio_css, unsafe_allow_html=True)
+
     cont_principal = st.container()
     with cont_principal:
         filtros, kpi = st.columns([0.3, 0.7])
         with filtros:
             container_filtros = st.container(border=True)
             with container_filtros:
+                st.write("Tiempo de Análisis")
                 fil1, fil2 = st.columns(2)
                 with fil1:
-                    st.write("De:")
-
                     df["Fecha"] = pd.to_datetime(df["Fecha"], errors='coerce')
                     df_time = df.dropna(subset=['Fecha']).copy()
 
@@ -26,15 +29,14 @@ def pageChurn():
                     fin_default = periodos_str[-1]
                     
                     st.selectbox(
-                        "Inicio",
+                        "Desde:",
                         options=periodos_str,
                         index=periodos_str.index(inicio_default),
                         key="per_inicio"
                     )
                 with fil2:
-                    st.write("A:")
                     st.selectbox(
-                        "Fin",
+                        "Hasta:",
                         options=periodos_str,
                         index=periodos_str.index(fin_default),
                         key="per_fin"
@@ -47,12 +49,26 @@ def pageChurn():
                 st.subheader("Cantidad de Usuarios por rangos de Transacciones")
                 k1, k2, k3 = st.columns(3)
                 with k1:
-                    st.container(border=True).metric(label="0 - 1000", value=f"{datos_trnx.get('0 - 1000', 0)} usuarios")
+                    value = formato_miles(datos_trnx.get('0 - 1000', 0))
+                    label = "0 - 1000"
+                    #st.container(border=True).metric(label="0 - 1000", value=f"{value} usuarios")
+                    st.markdown(f"""
+                                <div class="metric-card" style="border-left: 4px solid #3ab64e;">
+                                <div class="metric-title">{label}</div>
+                                <div class="metric-value" style="color: #3ab64e;">{value} usuarios</div>
+                                </div>
+                                """, unsafe_allow_html=True)
                 with k2:
-                    st.container(border=True).metric(label="1000 - 3000", value=f"{datos_trnx.get('1000 - 3000', 0)} usuarios")
-                with k3:
-                    st.container(border=True).metric(label="3000+", value=f"{datos_trnx.get('3000+', 0)} usuarios")
-
+                    value1 = formato_miles(datos_trnx.get('1000 - 3000', 0))
+                    label = "1000 - 3000"
+                    # st.container(border=True).metric(label="1000 - 3000", value=f"{value1} usuarios")
+                    st.markdown(f"""
+                                <div class="metric-card" style="border-left: 4px solid #3ab64e;">
+                                <div class="metric-title">{label}</div>
+                                <div class="metric-value" style="color: #3ab64e;">{value1} usuarios</div>
+                                </div>
+                                """, unsafe_allow_html=True)
+                
     col1, col2, col3, col4 = st.columns(4)
 
     per_inicio = st.session_state["per_inicio"]
@@ -77,4 +93,4 @@ def pageChurn():
           
         cont2 = st.container(border=True)
         fig2 = kpi_motivos_de_llamada_top3(per_inicio, per_fin)
-        cont2.plotly_chart(fig2, use_container_width=True) 
+        cont2.plotly_chart(fig2, use_container_width=True)

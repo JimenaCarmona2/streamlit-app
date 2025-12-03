@@ -110,7 +110,7 @@ if "page" not in st.session_state:
 
 url_page = st.query_params.get("page")
 
-if url_page in ["incio", "propuestas", "pageInfo", "pageChurn", "pageUsuario"]:
+if url_page in ["inicio", "propuestas", "pageInfo", "pageChurn", "pageUsuario"]:
     st.session_state.page = url_page
 else:
     st.query_params["page"] = st.session_state.page

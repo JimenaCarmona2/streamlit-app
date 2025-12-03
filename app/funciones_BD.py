@@ -74,7 +74,14 @@ def kpi_motivos_de_llamada_top3(per_inicio, per_fin):
         xaxis_title = None,
         yaxis_title_font_size=10,
         legend_title_font_size=10,
-        height=400
+        height=400,
+        xaxis = dict(
+            tickfont = dict(size=14)
+        ),
+        yaxis = dict(
+            tickfont = dict(size=14),
+            title_font = dict(size=14)
+        ),
     )
     
     return fig
@@ -106,7 +113,11 @@ def kpi_distribucion_horario(per_inicio, per_fin):
         hole=0.5
     )
     fig.update_traces(textinfo='percent+label', rotation=90)
-    fig.update_layout(showlegend=False, height=400)
+    fig.update_layout(
+        showlegend=False, 
+        height=400,
+        font=dict(size=14)
+        )
 
     return fig
 
@@ -130,7 +141,8 @@ def kpi_atencion_telefonica(per_inicio, per_fin):
         legend_title_font_size=10,
         legend_font_size=10,
         showlegend=False,
-        height=400
+        height=400,
+        font=dict(size=14)
     )
     return fig
 
@@ -165,7 +177,15 @@ def churn_en_el_tiempo(periodo_inicio, periodo_fin):
         xaxis_title=None,
         yaxis_title_font_size=14,
         legend_title_font_size=10,
-        height=400
+        title_font_size=20,
+        height=400,
+        xaxis = dict(
+            tickfont = dict(size=14)
+        ),
+        yaxis = dict(
+            tickfont = dict(size=14),
+            title_font = dict(size=14)
+        )
     )
     return fig
 
@@ -180,29 +200,45 @@ def calificacion_call_center(df):
         tabla,
         x='Calificación',
         y='Cantidad',
-        #color='Calificación',
         color_discrete_sequence=colores,
         title='Calificación del Call Center',
     )
     fig.update_layout(
         xaxis_title=None,
-        yaxis_title_font_size=10,
-        legend_title_font_size=10,
         height=400,
-        showlegend=False
+        showlegend=False,
+        title_font_size=20,
+        xaxis = dict(
+            tickfont = dict(size=14)
+        ),
+        yaxis = dict(
+            tickfont = dict(size=14),
+            title_font = dict(size=14)
+        )
     )
     return fig
 
 # Métricas
+def formato_miles(numero):
+    if numero >= 1_000_000_000:
+        return f"{numero / 1_000_000_000:.2f} B"
+    elif numero >= 1_000_000:
+        return f"{numero / 1_000_000:.2f} M"
+    elif numero >= 1_000:
+        return f"{numero / 1_000:.2f} K"
+    else:
+        return str(numero)
+
+
 def usuarios_totales(df):
     total_usuarios = df['Id_user'].nunique()
-    format_total = f"{total_usuarios:,}".replace(".", ",")
+    format_total = formato_miles(total_usuarios)
     return format_total
     
 def tasa_de_churn(df, df_churn):
     total_usuarios = df['Id_user'].nunique()
     usuarios_churn = df_churn['Id_user'].nunique()
-    format_churn = f"{usuarios_churn:,}".replace(".", ",")
+    format_churn = formato_miles(usuarios_churn)
     tasa_churn = round((usuarios_churn / total_usuarios) * 100, 2)
     return format_churn + f" ({tasa_churn}%)"
 
