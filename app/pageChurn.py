@@ -53,9 +53,9 @@ def pageChurn():
                     label = "0 - 1000"
                     #st.container(border=True).metric(label="0 - 1000", value=f"{value} usuarios")
                     st.markdown(f"""
-                                <div class="metric-card" style="border-left: 4px solid #3ab64e;">
+                                <div class="metric-card" style="border-left: 4px solid #426eff;">
                                 <div class="metric-title">{label}</div>
-                                <div class="metric-value" style="color: #3ab64e;">{value} usuarios</div>
+                                <div class="metric-value" style="color: #426eff;">{value} usuarios</div>
                                 </div>
                                 """, unsafe_allow_html=True)
                 with k2:
@@ -63,9 +63,9 @@ def pageChurn():
                     label = "1000 - 3000"
                     # st.container(border=True).metric(label="1000 - 3000", value=f"{value1} usuarios")
                     st.markdown(f"""
-                                <div class="metric-card" style="border-left: 4px solid #3ab64e;">
+                                <div class="metric-card" style="border-left: 4px solid #426eff;">
                                 <div class="metric-title">{label}</div>
-                                <div class="metric-value" style="color: #3ab64e;">{value1} usuarios</div>
+                                <div class="metric-value" style="color: #426eff;">{value1} usuarios</div>
                                 </div>
                                 """, unsafe_allow_html=True)
                 
