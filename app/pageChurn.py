@@ -3,7 +3,6 @@ from funciones_BD import *
 
 def pageChurn():
     df = st.session_state["data"]
-    df_churn = st.session_state["data_churn"]
 
     with open("app/styles/pageChurn.css") as f:
         inicio_css = f"<style>{f.read()}</style>"
@@ -13,9 +12,11 @@ def pageChurn():
     with cont_principal:
         filtros, kpi = st.columns([0.3, 0.7])
         with filtros:
+            st.markdown('<div style="margin-top: 20px;">', unsafe_allow_html=True)
             container_filtros = st.container(border=True)
             with container_filtros:
-                st.write("Tiempo de Análisis")
+                st.markdown('<div class="form-section-title">Tiempo de Análisis</div>', unsafe_allow_html=True)
+
                 fil1, fil2 = st.columns(2)
                 with fil1:
                     df["Fecha"] = pd.to_datetime(df["Fecha"], errors='coerce')
@@ -28,30 +29,34 @@ def pageChurn():
                     inicio_default = periodos_str[0]
                     fin_default = periodos_str[-1]
                     
+                    st.markdown('<div class="form-section-title">Desde:</div>', unsafe_allow_html=True)
                     st.selectbox(
-                        "Desde:",
+                        "",
                         options=periodos_str,
                         index=periodos_str.index(inicio_default),
-                        key="per_inicio"
+                        key="per_inicio",
+                        label_visibility="collapsed"
                     )
                 with fil2:
+                    st.markdown('<div class="form-section-title">Hasta:</div>', unsafe_allow_html=True)
                     st.selectbox(
-                        "Hasta:",
+                        "",
                         options=periodos_str,
                         index=periodos_str.index(fin_default),
-                        key="per_fin"
+                        key="per_fin",
+                        label_visibility="collapsed"
                     )
+            st.markdown('</div>', unsafe_allow_html=True)
 
         with kpi:
             container_kpi = st.container()
             with container_kpi:
                 datos_trnx = kpi_churn_por_nivel_de_cuenta()
-                st.subheader("Cantidad de Usuarios por rangos de Transacciones")
+                st.markdown('<div class="form-title">Cantidad de Usuarios por Transacciones</div>', unsafe_allow_html=True)
                 k1, k2, k3 = st.columns(3)
                 with k1:
                     value = formato_miles(datos_trnx.get('0 - 1000', 0))
-                    label = "0 - 1000"
-                    #st.container(border=True).metric(label="0 - 1000", value=f"{value} usuarios")
+                    label = "0 - 1000 transacciones"
                     st.markdown(f"""
                                 <div class="metric-card" style="border-left: 4px solid #426eff;">
                                 <div class="metric-title">{label}</div>
@@ -60,8 +65,7 @@ def pageChurn():
                                 """, unsafe_allow_html=True)
                 with k2:
                     value1 = formato_miles(datos_trnx.get('1000 - 3000', 0))
-                    label = "1000 - 3000"
-                    # st.container(border=True).metric(label="1000 - 3000", value=f"{value1} usuarios")
+                    label = "1000 - 3000 transacciones"
                     st.markdown(f"""
                                 <div class="metric-card" style="border-left: 4px solid #426eff;">
                                 <div class="metric-title">{label}</div>
@@ -76,21 +80,25 @@ def pageChurn():
 
     with col1:
         cont1 = st.container(border=True)
+        cont1.markdown('<div class="form-section-title-graph">Churn por Grupo de Edad</div>', unsafe_allow_html=True)
         fig1 = kpi_abandono_por_edad(per_inicio, per_fin)
         cont1.plotly_chart(fig1, use_container_width=True)
 
     with col2:
         cont5 = st.container(border=True)
+        cont5.markdown('<div class="form-section-title-graph">Churn por Canal de Atención</div>', unsafe_allow_html=True)
         fig5 = kpi_atencion_telefonica(per_inicio, per_fin)
         cont5.plotly_chart(fig5, use_container_width=True)
 
     with col3:
         cont4 = st.container(border=True)
+        cont4.markdown('<div class="form-section-title-graph">Churn de Usuarios por Turno</div>', unsafe_allow_html=True)
         fig4 = kpi_distribucion_horario(per_inicio, per_fin)
         cont4.plotly_chart(fig4, use_container_width=True) 
         
     with col4:
           
         cont2 = st.container(border=True)
+        cont2.markdown('<div class="form-section-title-graph">Motivos de Llamada Previos al Churn</div>', unsafe_allow_html=True)
         fig2 = kpi_motivos_de_llamada_top3(per_inicio, per_fin)
         cont2.plotly_chart(fig2, use_container_width=True)

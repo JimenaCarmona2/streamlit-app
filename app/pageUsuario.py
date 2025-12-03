@@ -80,9 +80,6 @@ def pageUsuario():
         },
     ]
 
-
-
-
     def get_index(i):
         return i % len(perfiles)
 
@@ -92,7 +89,6 @@ def pageUsuario():
         perfiles[(idx + 1) % len(perfiles)],
         perfiles[(idx + 2) % len(perfiles)]
     ]
-
 
     cols = st.columns([1, 3, 3, 3, 1], gap="small")
 
@@ -108,8 +104,6 @@ def pageUsuario():
                     <div class="perfil-subtitle" style="font-size: 14px; opacity: 0.85; margin-top: 6px;">{perfil['riesgo']}</div>
                 </div>
             """, unsafe_allow_html=True)
-
-
 
     with st.container():
         st.markdown("<div style='text-align: center; margin-top: -10px;'>", unsafe_allow_html=True)
@@ -133,18 +127,12 @@ def pageUsuario():
                 st.session_state.perfil_index = (st.session_state.perfil_index + GRUPO_TAM) % TOTAL
                 st.session_state.perfil_index -= st.session_state.perfil_index % GRUPO_TAM
 
-
-
         st.markdown("</div>", unsafe_allow_html=True)
-
-
-
 
     st.markdown("### Predicción en Tiempo Real")
 
     def safe_index(lista, valor_default, valor_usuario):
         return lista.index(valor_usuario) if valor_usuario in lista else lista.index(valor_default)
-
 
     # === Usuarios Mock-up para autollenado ===
     usuarios_prueba = {
@@ -226,9 +214,6 @@ def pageUsuario():
             st.session_state[campo] = valor
         st.rerun()
 
-
-
-
     # === Cargar tu modelo directamente (sin dropdown) ===
     models_dir = "models"
     model_name = "modelo_final.joblib"
@@ -256,7 +241,6 @@ def pageUsuario():
                     key="Cat_age"
                 )
 
-
                 opciones_gender = ["female", "male"]
                 Gender = st.selectbox(
                     "Género",
@@ -272,7 +256,6 @@ def pageUsuario():
                 value=st.session_state.get("Age", 30),
                 key="Age"
             )
-
 
                 opciones_occ = ['Sin actividad laboral', 'Otros/No especificado', 'Independiente/Negocio', 'Estudiante', 'Empleado(a)']
                 Cat_occupation = st.selectbox(
@@ -458,8 +441,6 @@ def pageUsuario():
                             </div>
                         </div>
                     ''', unsafe_allow_html=True)
-
-
 
 if __name__ == "__main__":
     pageUsuario()

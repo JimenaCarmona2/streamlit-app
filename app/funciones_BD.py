@@ -35,21 +35,17 @@ def kpi_abandono_por_edad(per_inicio, per_fin):
         y="Usuarios",
         color_discrete_sequence=colores,
         labels={"Usuarios": "Número de Usuarios"},
-        title="Churn por Grupo de Edad"
+        title=None
     )
 
     fig.update_layout(
         xaxis_title = None,
-        xaxis = dict(
-            tickfont = dict(size=14)
-        ),
+        xaxis = dict(tickfont = dict(size=14)),
         yaxis_title_font_size=10,
-        yaxis = dict(
-            tickfont = dict(size=14),
-            title_font = dict(size=14)
-        ),
+        yaxis = dict(tickfont = dict(size=14),title_font = dict(size=14)),
         legend_title_font_size=10,
         height=400,
+        margin = dict(t=10)
     )
     
     return fig
@@ -68,20 +64,16 @@ def kpi_motivos_de_llamada_top3(per_inicio, per_fin):
         y="Usuarios",
         color_discrete_sequence=colores,
         labels={"Usuarios": "Número de Usuarios"},
-        title="Motivos de Llamada Previos al Churn",
+        title=None,
     )
     fig.update_layout(
         xaxis_title = None,
         yaxis_title_font_size=10,
         legend_title_font_size=10,
         height=400,
-        xaxis = dict(
-            tickfont = dict(size=14)
-        ),
-        yaxis = dict(
-            tickfont = dict(size=14),
-            title_font = dict(size=14)
-        ),
+        xaxis = dict(tickfont = dict(size=14)),
+        yaxis = dict(tickfont = dict(size=14), title_font = dict(size=14)),
+        margin = dict(t=10)
     )
     
     return fig
@@ -109,15 +101,15 @@ def kpi_distribucion_horario(per_inicio, per_fin):
         names=tabla.index,
         values=tabla.values,
         color_discrete_sequence=colors,
-        title="Churn de Usuarios por Turno",
+        title=None,
         hole=0.5
     )
     fig.update_traces(textinfo='percent+label', rotation=90)
     fig.update_layout(
         showlegend=False, 
         height=400,
-        font=dict(size=14)
-        )
+        font=dict(size=14),
+    )
 
     return fig
 
@@ -131,18 +123,17 @@ def kpi_atencion_telefonica(per_inicio, per_fin):
         names="Por_que_canal_nos_esta_contactando",
         values="Usuarios",
         color_discrete_sequence=colores,
-        title="Churn por Canal de Atención",
+        title=None,
         hole=0.5
     )
     fig.update_traces(textinfo='percent+label', rotation=45)
     fig.update_layout(
-        title_font_size=16,
         legend_title="Canal",
         legend_title_font_size=10,
         legend_font_size=10,
         showlegend=False,
         height=400,
-        font=dict(size=14)
+        font=dict(size=14),
     )
     return fig
 
@@ -171,7 +162,7 @@ def churn_en_el_tiempo(periodo_inicio, periodo_fin):
         y='Churn_Rate',
         markers=True,
         labels={'Churn_Rate': 'Churn (%)', 'Periodo_str': 'Periodo'},
-        title='Churn a través del Tiempo',
+        title=None,
     )
     fig.update_layout(
         xaxis_title=None,
@@ -179,13 +170,9 @@ def churn_en_el_tiempo(periodo_inicio, periodo_fin):
         legend_title_font_size=10,
         title_font_size=20,
         height=400,
-        xaxis = dict(
-            tickfont = dict(size=14)
-        ),
-        yaxis = dict(
-            tickfont = dict(size=14),
-            title_font = dict(size=14)
-        )
+        margin = dict(t=0),
+        xaxis = dict(tickfont = dict(size=14)),
+        yaxis = dict(tickfont = dict(size=14),title_font = dict(size=14))
     )
     return fig
 
@@ -201,20 +188,16 @@ def calificacion_call_center(df):
         x='Calificación',
         y='Cantidad',
         color_discrete_sequence=colores,
-        title='Calificación del Call Center',
+        title=None,
     )
     fig.update_layout(
         xaxis_title=None,
         height=400,
         showlegend=False,
+        margin = dict(t=0),
         title_font_size=20,
-        xaxis = dict(
-            tickfont = dict(size=14)
-        ),
-        yaxis = dict(
-            tickfont = dict(size=14),
-            title_font = dict(size=14)
-        )
+        xaxis = dict(tickfont = dict(size=14)),
+        yaxis = dict(tickfont = dict(size=14),title_font = dict(size=14))
     )
     return fig
 
@@ -228,7 +211,6 @@ def formato_miles(numero):
         return f"{numero / 1_000:.2f} K"
     else:
         return str(numero)
-
 
 def usuarios_totales(df):
     total_usuarios = df['Id_user'].nunique()

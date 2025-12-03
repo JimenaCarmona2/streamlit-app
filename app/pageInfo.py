@@ -18,27 +18,30 @@ def pageInfo():
             contFiltros = st.container(border=True)
 
             with contFiltros:
-                st.markdown('<div class="filtro-box">', unsafe_allow_html=True)
 
                 contFil = st.container()
 
                 with contFil:
                     f1, f2 = st.columns(2)
                     with f1:
+                        st.markdown('<div class="form-section-title">Usuarios</div>', unsafe_allow_html=True)
                         genero = st.radio(
-                            "Usuarios",
+                            "",
                             options=["Ambos", "Mujeres", "Hombres"],
                             horizontal=True,
-                            key="filtro_usuario"
+                            key="filtro_usuario",
+                            label_visibility="collapsed"
                         )
                     with f2:
+                        st.markdown('<div class="form-section-title">Calificación Call Center</div>', unsafe_allow_html=True)
                         st.radio(
-                            "Calificación Call Center",
+                            "",
                             options=["No churn", "Churn"],
                             horizontal=True,
-                            key="filtro_calificacion"
+                            key="filtro_calificacion",
+                            label_visibility="collapsed"
                         )
-                st.text("Tiempo de Análisis")
+                st.markdown('<div class="form-section-title">Tiempo de Análisis</div>', unsafe_allow_html=True)
 
                 df["Fecha"] = pd.to_datetime(df["Fecha"], errors='coerce')
                 df_time = df.dropna(subset=['Fecha']).copy()
@@ -53,22 +56,24 @@ def pageInfo():
                 fil1, fil2 = st.columns(2)
 
                 with fil1:
+                    st.markdown('<div class="form-section-title">Desde:</div>', unsafe_allow_html=True)
                     st.selectbox(
-                        "Desde:",
+                        "",
                         options=periodos_str,
                         index=periodos_str.index(inicio_default),
-                        key="periodo_inicio"
+                        key="periodo_inicio",
+                        label_visibility="collapsed"
                     )
                     
                 with fil2:
+                    st.markdown('<div class="form-section-title">Hasta:</div>', unsafe_allow_html=True)
                     st.selectbox(
-                        "Hasta:",
+                        "",
                         options=periodos_str,
                         index=periodos_str.index(fin_default),
-                        key="periodo_fin"
+                        key="periodo_fin",
+                        label_visibility="collapsed"
                     )
-
-                st.markdown('</div>', unsafe_allow_html=True)
 
         with col_left:
             cont_left = st.container()
@@ -85,11 +90,6 @@ def pageInfo():
                                 </div>
                                 """, unsafe_allow_html=True)
 
-                    # with st.container(border=True):
-                    #     st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-                    #     st.metric(label="Satisfacción baja del cliente", value=meta1)
-                    #     st.markdown('</div>', unsafe_allow_html=True)
-                    
                 with col_m2:
                     meta2 = meta_2()
                     st.markdown(f"""
@@ -117,7 +117,6 @@ def pageInfo():
                     elif genero == "Hombres":
                         label = "Usuarios Hombres"
 
-                    #st.container(border=True).metric(label=label, value=usuarios)
                     st.markdown(f"""
                                 <div class="metric-card" style="border-left: 4px solid #426eff;">
                                 <div class="metric-title">{label}</div>
@@ -129,7 +128,6 @@ def pageInfo():
 
             with col_b1:
                 value = formato_miles(2720000)
-                #st.container(border=True).metric(label="Rendimiento", value=f"${value} USD")
                 st.markdown(f"""
                                 <div class="metric-card" style="border-left: 4px solid #3ab64e;">
                                 <div class="metric-title">Rendimiento</div>
@@ -138,7 +136,6 @@ def pageInfo():
                                 """, unsafe_allow_html=True)
                 
             with col_b2:
-                #st.container(border=True).metric(label="Costo por Cliente", value="$1.33 USD")
                 st.markdown(f"""
                                 <div class="metric-card" style="border-left: 4px solid #3ab64e;">
                                 <div class="metric-title">Costo por cliente</div>
@@ -167,7 +164,6 @@ def pageInfo():
                 elif genero == "Hombres":
                     label = "Usuarios en Churn (Hombres)"
 
-                #st.container(border=True).metric(label=label, value=usuariosC)
                 st.markdown(f"""
                                 <div class="metric-card" style="border-left: 4px solid #426eff;">
                                 <div class="metric-title">{label}</div>
@@ -182,11 +178,13 @@ def pageInfo():
         periodo_fin = st.session_state["periodo_fin"]
 
         container3 = st.container(border=True)
+        container3.markdown('<div class="form-section-title-graph">Churn a través del Tiempo</div>', unsafe_allow_html=True)
         fig1 = churn_en_el_tiempo(periodo_inicio, periodo_fin)
         container3.plotly_chart(fig1, use_container_width=True)
 
     with col6:
         container7 = st.container(border=True)
+        container7.markdown('<div class="form-section-title-graph">Calificación del Call Center</div>', unsafe_allow_html=True)
         filtroCC = st.session_state["filtro_calificacion"]
         genero = st.session_state["filtro_usuario"]
 
