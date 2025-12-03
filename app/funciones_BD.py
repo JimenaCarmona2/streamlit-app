@@ -12,8 +12,6 @@ def cargar_data():
 def filtrar_por_tiempo(df, per_inicio, per_fin):
     data = df.copy()
     data["Fecha"] = pd.to_datetime(data['Fecha'], errors="coerce")
-    #data.loc[data["Fecha"].notna(), "periodo"] = data["Fecha"].dt.to_period('M')
-    #data = data.dropna(subset=["Fecha"])
 
     data['periodo'] = data['Fecha'].dt.to_period('M')
     p_ini = pd.Period(per_inicio, freq="M")
@@ -42,7 +40,14 @@ def kpi_abandono_por_edad(per_inicio, per_fin):
 
     fig.update_layout(
         xaxis_title = None,
+        xaxis = dict(
+            tickfont = dict(size=14)
+        ),
         yaxis_title_font_size=10,
+        yaxis = dict(
+            tickfont = dict(size=14),
+            title_font = dict(size=14)
+        ),
         legend_title_font_size=10,
         height=400,
     )
@@ -98,8 +103,9 @@ def kpi_distribucion_horario(per_inicio, per_fin):
         values=tabla.values,
         color_discrete_sequence=colors,
         title="Churn de Usuarios por Turno",
+        hole=0.5
     )
-    fig.update_traces(textinfo='percent+label')
+    fig.update_traces(textinfo='percent+label', rotation=90)
     fig.update_layout(showlegend=False, height=400)
 
     return fig
@@ -115,9 +121,9 @@ def kpi_atencion_telefonica(per_inicio, per_fin):
         values="Usuarios",
         color_discrete_sequence=colores,
         title="Churn por Canal de Atención",
-        hole=0.5,
+        hole=0.5
     )
-    fig.update_traces(textinfo='percent+label')
+    fig.update_traces(textinfo='percent+label', rotation=45)
     fig.update_layout(
         title_font_size=16,
         legend_title="Canal",
@@ -153,18 +159,15 @@ def churn_en_el_tiempo(periodo_inicio, periodo_fin):
         y='Churn_Rate',
         markers=True,
         labels={'Churn_Rate': 'Churn (%)', 'Periodo_str': 'Periodo'},
-        title='Churn en el Tiempo',
+        title='Churn a través del Tiempo',
     )
     fig.update_layout(
         xaxis_title=None,
-        yaxis_title_font_size=10,
+        yaxis_title_font_size=14,
         legend_title_font_size=10,
         height=400
     )
     return fig
-
-def costo_por_cliente():
-    pass
 
 def calificacion_call_center(df):
     tabla = df['Respcsat'].value_counts().reset_index()
@@ -220,5 +223,3 @@ def meta_2():
         frecuencia = round(total_trnx / usuarios_act, 0)
     
     return f"{frecuencia}"
-
-
